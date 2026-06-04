@@ -1,0 +1,15 @@
+{
+  "name": "ELEUMHY",
+  "short_name": "ELEUMHY",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#C9A84C",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}

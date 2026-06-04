@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="ELEUMHY">
 <meta name="description" content="ELEUMHY — Moda que Habla Por Ti. Tienda online con pago por cuotas.">
 <title>ELEUMHY — Moda Premium</title>
-<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22ELEUMHY%22%2C%22short_name%22%3A%22ELEUMHY%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23FAFAF8%22%2C%22theme_color%22%3A%22%23C9A84C%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgo%3D%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+<link rel="manifest" href="./manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -1006,6 +1006,11 @@ function selectPay(method) {
 }
 
 function processPay() {
+  if (!currentUser) {
+    showToast('⚠️ Debes iniciar sesión para pagar', 'red');
+    showScreen('login');
+    return;
+  }
   if (currentPay === 'movil' || currentPay === 'transfer') showScreen('payment');
   else if (currentPay === 'cuotas') showCuotasModal();
   else { showToast('✅ ¡Pedido confirmado! Gracias', 'green'); cart = []; saveCart(); updateCartBadge(); setTimeout(() => showScreen('home'), 1000); }
@@ -1026,6 +1031,11 @@ function uploadComprobante() {
 // CUOTAS MODAL (MEJORADO)
 // ═══════════════════════════════════════
 function showCuotasModal() {
+  if (!currentUser) {
+    showToast('⚠️ Debes iniciar sesión para pagar en cuotas', 'red');
+    showScreen('login');
+    return;
+  }
   renderCart();
   const sub = cart.reduce((a, c) => a + c.product.price * c.qty, 0);
   const mt = document.getElementById('modalTotal');
@@ -1089,6 +1099,19 @@ function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
+  
+  // Admin Check
+  if (email === 'admin@eleumhy.com' && pass === 'admin123') {
+    currentUser = { name: "Administrador", email, phone: "-", isAdmin: true };
+    localStorage.setItem('eleumhy_user', JSON.stringify(currentUser));
+    showToast('Bienvenido Admin', 'gold');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPass').value = '';
+    showScreen('profile');
+    renderProfile();
+    return;
+  }
+
   const users = JSON.parse(localStorage.getItem('eleumhy_users') || '[]');
   const found = users.find(u => u.email === email && u.pass === pass);
   if (!found) { showToast('Credenciales incorrectas', 'red'); return; }
@@ -1107,9 +1130,12 @@ function doRegister() {
   if (!name || !email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   if (pass !== pass2) { showToast('Las contraseñas no coinciden', 'red'); return; }
   if (pass.length < 8) { showToast('Mínimo 8 caracteres', 'red'); return; }
+  
+  if (email === 'admin@eleumhy.com') { showToast('Este correo es reservado', 'red'); return; }
+
   const users = JSON.parse(localStorage.getItem('eleumhy_users') || '[]');
   if (users.find(u => u.email === email)) { showToast('Correo ya registrado', 'red'); return; }
-  const user = {name, email, phone, pass, createdAt: new Date().toISOString()};
+  const user = {name, email, phone, pass, createdAt: new Date().toISOString(), isAdmin: false};
   users.push(user);
   localStorage.setItem('eleumhy_users', JSON.stringify(users));
   currentUser = user;
@@ -1141,7 +1167,7 @@ function renderProfile() {
       <div class="menu-item" onclick="showScreen('orders')"><span>📦 Mis Pedidos</span><span style="color:var(--muted);">→</span></div>
       <div class="menu-item" onclick=""><span>❤️ Favoritos (${wishlist.length})</span><span style="color:var(--muted);">→</span></div>
       <div class="menu-item" onclick="showScreen('mycuotas')"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>
-      <div class="menu-item" onclick="showScreen('admin')"><span>⚙️ Panel Administrador</span><span style="color:var(--gold);">→</span></div>
+      ${currentUser.isAdmin ? `<div class="menu-item" onclick="showScreen('admin')"><span>⚙️ Panel Administrador</span><span style="color:var(--gold);">→</span></div>` : ''}
       <div class="menu-item" onclick="requestNotifPermission()"><span>🔔 Activar Notificaciones</span><span style="color:var(--muted);">→</span></div>
       <div class="divider-gold"></div>
       <div class="menu-item" onclick="doLogout()" style="color:var(--danger);"><span>🚪 Cerrar Sesión</span><span>→</span></div>`;
@@ -1155,9 +1181,8 @@ function renderProfile() {
       <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;margin-bottom:12px;border-radius:14px;" onclick="showScreen('login')">Iniciar Sesión</button>
       <button class="btn-outline" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="showScreen('register')">Crear Cuenta Gratis</button>
       <div class="divider-gold"></div>
-      <div class="menu-item" onclick="showScreen('orders')"><span>📦 Mis Pedidos</span><span style="color:var(--muted);">→</span></div>
-      <div class="menu-item" onclick="showScreen('mycuotas')"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>
-      <div class="menu-item" onclick="showScreen('admin')"><span>⚙️ Panel Administrador</span><span style="color:var(--gold);">→</span></div>`;
+      <div class="menu-item" onclick="showToast('Inicia sesión para ver tus pedidos','red');showScreen('login');"><span>📦 Mis Pedidos</span><span style="color:var(--muted);">→</span></div>
+      <div class="menu-item" onclick="showToast('Inicia sesión para ver tus cuotas','red');showScreen('login');"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>`;
   }
 }
 
@@ -1284,25 +1309,41 @@ self.addEventListener('push',e=>{const d=e.data?e.data.text():'Nueva notificaci�
   navigator.serviceWorker.register(swUrl).catch(() => {});
 }
 
-// PWA Install Banner
+// PWA Install Modal (Native look)
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  const banner = document.createElement('div');
-  banner.className = 'install-banner';
-  banner.id = 'installBanner';
-  banner.innerHTML = `
-    <div style="font-size:24px;">📱</div>
-    <div class="install-banner-text">Instala ELEUMHY en tu teléfono para acceso rápido</div>
-    <button class="btn-outline" style="border-color:rgba(255,255,255,0.5);color:#fff;padding:7px 14px;font-size:11px;white-space:nowrap;background:rgba(255,255,255,0.15);" onclick="installApp()">Instalar</button>
-    <button class="install-banner-close" onclick="document.getElementById('installBanner').remove()">✕</button>`;
-  document.body.appendChild(banner);
-  setTimeout(() => { if (document.getElementById('installBanner')) document.getElementById('installBanner').remove(); }, 10000);
+  setTimeout(() => {
+    if (document.getElementById('installModal')) return;
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay fade-in-up';
+    modal.id = 'installModal';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.innerHTML = `
+      <div style="background:var(--white);border-radius:24px;padding:30px 24px;width:90%;max-width:320px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);">
+        <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--gold-glow);position:relative;overflow:hidden;">
+          <img src="icon.png" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover;z-index:2;position:relative;">
+          <div style="position:absolute;font-size:32px;color:#fff;z-index:1;">E</div>
+        </div>
+        <div style="font-size:18px;font-weight:900;margin-bottom:8px;">Instala ELEUMHY</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;">Añade la app a tu pantalla de inicio para una experiencia premium y ofertas exclusivas.</div>
+        <button class="btn-gold" style="width:100%;padding:14px;border-radius:12px;margin-bottom:10px;font-size:14px;" onclick="installApp()">Instalar App</button>
+        <button style="width:100%;padding:14px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:var(--transition);" onclick="document.getElementById('installModal').remove()">Más tarde</button>
+      </div>`;
+    document.body.appendChild(modal);
+  }, 3000); // Aparece 3 segundos después de cargar
 });
 
 function installApp() {
-  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('installBanner')?.remove(); }); }
+  if (deferredPrompt) { 
+    deferredPrompt.prompt(); 
+    deferredPrompt.userChoice.then(() => { 
+      deferredPrompt = null; 
+      if(document.getElementById('installModal')) document.getElementById('installModal').remove(); 
+    }); 
+  }
 }
 
 // ═══════════════════════════════════════
