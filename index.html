@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#C9A84C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ELEUMHY">
+<meta name="description" content="ELEUMHY — Moda que Habla Por Ti. Tienda online con pago por cuotas.">
+<title>ELEUMHY — Moda Premium</title>
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22ELEUMHY%22%2C%22short_name%22%3A%22ELEUMHY%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23FAFAF8%22%2C%22theme_color%22%3A%22%23C9A84C%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgo%3D%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-dark:#8B6914;--gold-pale:#F5EDD6;--gold-glow:rgba(201,168,76,0.25);
+  --white:#FFFFFF;--off-white:#FAFAF8;--surface:#F7F4EE;--surface2:#EDE8DF;
+  --text:#1A1A1A;--muted:#8A8070;--border:#DDD5C0;--danger:#C0392B;--warn:#B8860B;
+  --glass:rgba(255,255,255,0.7);--glass-border:rgba(201,168,76,0.2);
+  --dark-bg:#0F0E0C;--dark-card:#1A1914;--dark-surface:#251F15;
+  --radius:16px;--radius-sm:10px;--radius-lg:24px;
+  --shadow:0 4px 20px rgba(201,168,76,0.12);--shadow-lg:0 12px 40px rgba(201,168,76,0.2);
+  --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── BASE ── */
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--off-white);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.92);}to{opacity:1;transform:scale(1);}}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+@keyframes countUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 var(--gold-glow);}50%{box-shadow:0 0 0 12px transparent;}}
+@keyframes ripple{to{transform:scale(4);opacity:0;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.fade-in-up{animation:fadeInUp .4s ease both;}
+.scale-in{animation:scaleIn .3s ease both;}
+.slide-up{animation:slideUp .35s cubic-bezier(0.4,0,0.2,1) both;}
+
+/* ── SKELETON LOADING ── */
+.skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+
+/* ── NAV ── */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.logo{font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:4px;}
+.nav-icons{display:flex;gap:12px;align-items:center;}
+.nav-icon{background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--transition);}
+.nav-icon:hover{background:var(--gold-pale);}
+.badge{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#fff;border-radius:50%;width:18px;height:18px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:800;border:2px solid var(--off-white);animation:pulse 2s infinite;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;z-index:100;box-shadow:0 -4px 20px rgba(201,168,76,0.1);padding-bottom:env(safe-area-inset-bottom);}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;gap:3px;cursor:pointer;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;font-family:'Montserrat',sans-serif;letter-spacing:.5px;position:relative;transition:var(--transition);}
+.bnav-item.active{color:var(--gold);}
+.bnav-item.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:3px;background:var(--gold);border-radius:0 0 4px 4px;}
+.bnav-item svg{width:22px;height:22px;transition:var(--transition);}
+.bnav-item.active svg{transform:scale(1.15);}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:16px 16px 90px;animation:fadeInUp .35s ease;}
+.screen.active{display:block;}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(145deg,#0F0E0C 0%,#1E1A10 50%,#2A2010 100%);border-radius:var(--radius-lg);padding:32px 24px;margin-bottom:22px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.08;}
+.hero::after{content:'';position:absolute;bottom:-30px;left:20px;width:140px;height:140px;background:radial-gradient(circle,var(--gold-light) 0%,transparent 70%);opacity:0.06;}
+.hero-orb{position:absolute;top:50%;right:-10px;transform:translateY(-50%);width:120px;height:120px;background:conic-gradient(from 0deg,transparent,var(--gold),transparent);border-radius:50%;opacity:0.1;animation:spin 8s linear infinite;}
+.hero-tag{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#fff;font-size:9px;font-weight:800;padding:5px 14px;border-radius:20px;display:inline-block;margin-bottom:14px;letter-spacing:2px;box-shadow:0 2px 12px var(--gold-glow);}
+.hero h1{font-size:30px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:12px;letter-spacing:-0.5px;}
+.hero h1 span{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:#9A9080;font-size:12px;margin-bottom:20px;line-height:1.7;font-weight:400;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* ── BUTTONS ── */
+.btn-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border:none;padding:12px 24px;border-radius:30px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.5px;box-shadow:0 4px 16px var(--gold-glow);transition:var(--transition);position:relative;overflow:hidden;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.4);}
+.btn-gold:active{transform:translateY(0);}
+.btn-outline{background:rgba(201,168,76,0.08);color:var(--gold);border:1.5px solid var(--gold);padding:12px 24px;border-radius:30px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:var(--transition);}
+.btn-outline:hover{background:var(--gold-pale);}
+
+/* Ripple effect */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.3);transform:scale(0);animation:ripple 0.6s linear;pointer-events:none;}
+
+/* ── SECTION TITLES ── */
+.section-title{font-size:13px;font-weight:800;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
+.see-all{color:var(--gold);font-size:11px;cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:.5px;}
+
+/* ── CATEGORIES ── */
+.cats{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat{flex-shrink:0;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 18px;text-align:center;cursor:pointer;transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.cat.active,.cat:hover{border-color:var(--gold);background:var(--gold-pale);transform:translateY(-2px);box-shadow:0 4px 16px var(--gold-glow);}
+.cat-icon{font-size:22px;margin-bottom:5px;}
+.cat-name{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;}
+.cat.active .cat-name{color:var(--gold-dark);}
+
+/* ── PRODUCT CARDS ── */
+.products{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+.product-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:var(--transition);position:relative;box-shadow:0 2px 12px rgba(0,0,0,0.04);}
+.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--gold);}
+.product-card:active{transform:translateY(-1px);}
+.product-img{width:100%;height:170px;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--surface),var(--gold-pale));}
+.product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+.product-img .emoji-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:64px;}
+.product-card:hover .product-img img{transform:scale(1.08);}
+.product-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;font-size:8px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:1.5px;box-shadow:0 2px 8px var(--gold-glow);}
+.product-badge.hot{background:linear-gradient(135deg,#A93226,#C0392B);}
+.product-badge.oferta{background:linear-gradient(135deg,#1A5276,#2980B9);}
+.product-info{padding:12px;}
+.product-name{font-size:12px;font-weight:700;margin-bottom:4px;line-height:1.4;color:var(--text);}
+.product-price{color:var(--gold-dark);font-weight:800;font-size:16px;}
+.product-old{color:var(--muted);font-size:11px;text-decoration:line-through;margin-left:6px;}
+.product-actions{display:flex;gap:6px;margin-top:10px;}
+.btn-cart{flex:1;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border:none;border-radius:8px;padding:9px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:var(--transition);position:relative;overflow:hidden;}
+.btn-cart:hover{box-shadow:0 4px 12px var(--gold-glow);}
+.btn-wish{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:15px;transition:var(--transition);}
+.btn-wish:hover{border-color:var(--danger);background:#FFF5F5;}
+.btn-wish.active{color:var(--danger);border-color:var(--danger);}
+
+/* ── PRODUCT DETAIL ── */
+.detail-img{width:100%;height:300px;border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px;position:relative;box-shadow:var(--shadow-lg);}
+.detail-img img{width:100%;height:100%;object-fit:cover;}
+.detail-img .emoji-lg{width:100%;height:100%;background:linear-gradient(135deg,var(--surface),var(--gold-pale));display:flex;align-items:center;justify-content:center;font-size:110px;}
+.detail-title{font-size:22px;font-weight:900;margin-bottom:6px;line-height:1.2;}
+.detail-price{font-size:28px;font-weight:800;margin-bottom:18px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.attr-section{margin-bottom:18px;}
+.attr-label{font-size:10px;color:var(--muted);margin-bottom:8px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
+.attr-options{display:flex;gap:8px;flex-wrap:wrap;}
+.attr-chip{border:2px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;background:var(--white);font-family:'Montserrat',sans-serif;font-weight:600;transition:var(--transition);}
+.attr-chip:hover{border-color:var(--gold);}
+.attr-chip.selected{border-color:var(--gold);background:var(--gold-pale);color:var(--gold-dark);font-weight:800;}
+.cuota-box{background:linear-gradient(135deg,var(--gold-pale),#FFF3D0);border:1.5px solid var(--gold);border-radius:var(--radius);padding:16px;margin:18px 0;position:relative;overflow:hidden;}
+.cuota-box::before{content:'💳';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:32px;opacity:0.2;}
+.cuota-title{color:var(--gold-dark);font-weight:800;font-size:13px;margin-bottom:4px;}
+.cuota-desc{font-size:12px;color:var(--muted);font-weight:500;}
+
+/* ── CART ── */
+.cart-item{background:var(--white);border-radius:var(--radius);padding:14px;margin-bottom:12px;display:flex;gap:12px;border:1px solid var(--border);transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.cart-item:hover{box-shadow:var(--shadow);border-color:var(--border);}
+.cart-img{width:72px;height:72px;background:linear-gradient(135deg,var(--surface),var(--gold-pale));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;overflow:hidden;}
+.cart-img img{width:100%;height:100%;object-fit:cover;}
+.cart-details{flex:1;min-width:0;}
+.cart-name{font-size:13px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cart-meta{font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:500;}
+.qty-ctrl{display:flex;align-items:center;gap:10px;}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--white);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+.qty-btn:hover{border-color:var(--gold);background:var(--gold-pale);}
+.cart-total-box{background:var(--white);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.total-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:500;}
+.total-row.grand{font-weight:800;font-size:18px;color:var(--gold-dark);border-top:2px solid var(--gold-pale);padding-top:14px;margin-top:4px;}
+
+/* ── CHECKOUT ── */
+.pay-method{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);}
+.pay-method:hover{border-color:var(--gold);background:rgba(201,168,76,0.04);}
+.pay-method.selected{border-color:var(--gold);background:var(--gold-pale);box-shadow:var(--shadow);}
+.pay-icon{width:44px;height:44px;border-radius:12px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.pay-name{font-weight:800;font-size:13px;}
+.pay-desc{font-size:11px;color:var(--muted);font-weight:500;margin-top:2px;}
+.radio-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);margin-left:auto;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--transition);}
+.radio-dot.on{border-color:var(--gold);background:var(--gold-pale);}
+.radio-dot.on::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--gold);}
+
+/* ── QR / PAYMENT ── */
+.qr-box{background:var(--white);border:2px dashed var(--gold);border-radius:var(--radius-lg);padding:28px;text-align:center;margin:18px 0;box-shadow:var(--shadow);}
+.qr-fake{width:150px;height:150px;margin:0 auto 16px;background:#fff;border:2px solid var(--border);border-radius:12px;padding:12px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.qr-cell{border-radius:1px;background:#1A1A1A;}
+.qr-cell.w{background:#fff;}
+.copy-data{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;transition:var(--transition);}
+.copy-data:hover{border-color:var(--gold);}
+.copy-btn{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:var(--transition);}
+.copy-btn:hover{transform:scale(1.05);}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--white);}
+.upload-zone:hover{border-color:var(--gold);background:var(--gold-pale);}
+
+/* ── ADMIN ── */
+.admin-nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none;}
+.admin-nav::-webkit-scrollbar{display:none;}
+.admin-tab{flex-shrink:0;padding:9px 16px;border-radius:22px;border:2px solid var(--border);background:var(--white);cursor:pointer;font-size:11px;font-weight:700;color:var(--muted);font-family:'Montserrat',sans-serif;letter-spacing:.3px;transition:var(--transition);}
+.admin-tab.active{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border-color:var(--gold);box-shadow:0 4px 12px var(--gold-glow);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:18px;border:1px solid var(--border);position:relative;overflow:hidden;transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.stat-card::after{content:'';position:absolute;bottom:-10px;right:-10px;width:60px;height:60px;background:var(--gold);opacity:0.05;border-radius:50%;}
+.stat-num{font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:countUp .5s ease;}
+.stat-label{font-size:9px;font-weight:700;color:var(--muted);margin-top:3px;letter-spacing:1px;text-transform:uppercase;}
+.client-row{background:var(--white);border-radius:12px;padding:14px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;gap:12px;transition:var(--transition);}
+.client-row:hover{border-color:var(--gold);box-shadow:var(--shadow);}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--gold-dark);flex-shrink:0;border:2px solid var(--gold);}
+.client-info{flex:1;min-width:0;}
+.client-name{font-weight:700;font-size:13px;}
+.client-meta{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ws-btn{background:linear-gradient(135deg,#1DA851,#25D366);color:#fff;border:none;border-radius:8px;padding:7px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;}
+.debt-badge{background:linear-gradient(135deg,#FDECEA,#FDECEA);color:var(--danger);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:800;white-space:nowrap;}
+.ok-badge{background:var(--gold-pale);color:var(--gold-dark);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:800;white-space:nowrap;}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:10px;color:var(--muted);margin-bottom:7px;display:block;font-weight:800;letter-spacing:1px;text-transform:uppercase;}
+.form-input{width:100%;background:var(--white);border:2px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:13px;font-family:'Montserrat',sans-serif;outline:none;font-weight:500;transition:var(--transition);}
+.form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
+select.form-input{cursor:pointer;}
+
+/* ── CUOTAS MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-end;backdrop-filter:blur(4px);}
+.modal{background:var(--white);border-radius:28px 28px 0 0;padding:28px;width:100%;max-height:90vh;overflow-y:auto;border-top:4px solid var(--gold);}
+.modal-handle{width:44px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 22px;}
+
+/* ── CUOTA SLIDER ── */
+.cuota-slider-wrap{margin:18px 0;}
+.cuota-slider{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--gold) 25%,var(--border) 25%);outline:none;transition:var(--transition);}
+.cuota-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));cursor:pointer;box-shadow:0 2px 10px var(--gold-glow);border:3px solid #fff;}
+.cuota-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 2px 10px var(--gold-glow);border:3px solid #fff;}
+.cuota-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0;}
+.cuota-preview-item{background:var(--gold-pale);border:1.5px solid var(--gold);border-radius:12px;padding:12px;text-align:center;}
+.cuota-preview-n{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.cuota-preview-v{font-size:16px;font-weight:900;color:var(--gold-dark);}
+.cuota-timeline{margin:14px 0;}
+.cuota-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.cuota-row:last-child{border-bottom:none;}
+.cuota-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.cuota-num.paid{background:linear-gradient(135deg,#1DA851,#25D366);}
+
+/* ── AUTH ── */
+.auth-wrap{padding:50px 0 80px;}
+.auth-logo{font-size:40px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:5px;margin-bottom:8px;text-align:center;}
+.auth-sub{color:var(--muted);font-size:13px;margin-bottom:32px;text-align:center;font-weight:500;}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:11px;font-weight:600;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── PROFILE LOGGED IN ── */
+.profile-header{text-align:center;padding:28px 0 20px;}
+.profile-avatar{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 14px;box-shadow:0 4px 20px var(--gold-glow);}
+.profile-name{font-size:20px;font-weight:900;margin-bottom:4px;}
+.profile-email{color:var(--muted);font-size:12px;font-weight:500;}
+.menu-item{padding:16px 6px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center;transition:var(--transition);}
+.menu-item:hover{color:var(--gold);}
+.menu-item:last-child{border-bottom:none;}
+
+/* ── CUOTA PLAN CARD ── */
+.cuota-plan{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:2px solid var(--border);transition:var(--transition);}
+.cuota-plan:hover{border-color:var(--gold);}
+.cuota-plan-title{font-weight:800;font-size:15px;color:var(--gold-dark);margin-bottom:4px;}
+.plan-detail{font-size:12px;color:var(--muted);font-weight:500;}
+
+/* ── NOTIFICATIONS ── */
+.notif{background:var(--white);border-left:4px solid var(--gold);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.notif.warn{border-color:var(--warn);background:#FFFDF0;}
+.notif.danger{border-color:var(--danger);background:#FFF5F4;}
+.notif.ok{border-color:#25D366;background:#F0FFF6;}
+.notif-title{font-weight:800;font-size:13px;margin-bottom:3px;}
+.notif-desc{font-size:11px;color:var(--muted);font-weight:500;}
+
+/* ── CHARTS ── */
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:100px;margin-bottom:10px;}
+.chart-bar{flex:1;background:linear-gradient(180deg,var(--gold-pale),var(--surface));border-radius:6px 6px 0 0;min-height:8px;border:1px solid var(--border);transition:height .5s ease;}
+.chart-bar.today{background:linear-gradient(180deg,var(--gold-light),var(--gold));}
+.chart-labels{display:flex;gap:6px;}
+.chart-label{flex:1;text-align:center;font-size:9px;color:var(--muted);font-weight:700;}
+
+/* ── MISC ── */
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;cursor:pointer;font-weight:700;transition:var(--transition);}
+.pill:hover{border-color:var(--gold);background:var(--gold-pale);}
+.gold-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+.back-btn{background:var(--surface);border:1.5px solid var(--border);color:var(--text);font-size:12px;cursor:pointer;margin-bottom:18px;display:flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-weight:700;padding:8px 16px;border-radius:20px;width:fit-content;transition:var(--transition);}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.divider-gold{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:22px 0;opacity:.35;}
+.hidden{display:none!important;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--off-white);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* ── INSTALL BANNER ── */
+.install-banner{position:fixed;top:72px;left:16px;right:16px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border-radius:var(--radius);padding:14px 18px;z-index:150;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-lg);animation:slideDown .4s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+.install-banner-text{flex:1;font-size:12px;font-weight:700;}
+.install-banner-close{background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:14px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);padding:11px 24px;border-radius:30px;font-weight:700;font-size:12px;z-index:999;white-space:nowrap;animation:fadeInUp .3s ease;font-family:'Montserrat',sans-serif;letter-spacing:.3px;box-shadow:var(--shadow-lg);}
+.toast.gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;}
+.toast.red{background:linear-gradient(135deg,#A93226,#C0392B);color:#fff;}
+.toast.green{background:linear-gradient(135deg,#1DA851,#25D366);color:#fff;}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{display:flex;gap:5px;margin:12px 0;}
+.progress-bar-item{flex:1;height:6px;border-radius:3px;background:var(--border);}
+.progress-bar-item.done{background:linear-gradient(90deg,var(--gold-dark),var(--gold));}
+.progress-bar-item.current{background:linear-gradient(90deg,var(--gold),var(--gold-light));animation:pulse 1.5s infinite;}
+
+/* ── LOADING SPINNER ── */
+.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="nav" id="mainNav">
+  <div class="logo">ELEUMHY</div>
+  <div class="nav-icons">
+    <button class="nav-icon" onclick="goSearch()" id="searchBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="nav-icon" onclick="showScreen('cart')">
+      🛒<span class="badge" id="cartBadge">0</span>
+    </button>
+    <button class="nav-icon" id="profileNavBtn" onclick="showScreen('profile')">👤</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="screen active" id="screen-home">
+  <div class="hero fade-in-up">
+    <div class="hero-orb"></div>
+    <div class="hero-tag">✨ NUEVA COLECCIÓN 2025</div>
+    <h1>Moda que <span>Habla</span> Por Ti</h1>
+    <p>Descubre los últimos estilos con precios increíbles y pago por cuotas sin interés</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="showScreen('shop')">Ver Tienda 🛍</button>
+      <button class="btn-outline" onclick="showCuotasInfo()">Cuotas →</button>
+    </div>
+  </div>
+
+  <div style="margin-bottom:22px;">
+    <div class="section-title">Categorías <button class="see-all" onclick="showScreen('shop')">Ver todo</button></div>
+    <div class="cats">
+      <div class="cat active" onclick="filterCat(this,'all')"><div class="cat-icon">🛍</div><div class="cat-name">Todo</div></div>
+      <div class="cat" onclick="filterCat(this,'ropa')"><div class="cat-icon">👗</div><div class="cat-name">Ropa</div></div>
+      <div class="cat" onclick="filterCat(this,'zapatos')"><div class="cat-icon">👟</div><div class="cat-name">Zapatos</div></div>
+      <div class="cat" onclick="filterCat(this,'accesorios')"><div class="cat-icon">👜</div><div class="cat-name">Acces.</div></div>
+      <div class="cat" onclick="filterCat(this,'belleza')"><div class="cat-icon">💄</div><div class="cat-name">Belleza</div></div>
+    </div>
+  </div>
+
+  <div class="section-title">Destacados <button class="see-all" onclick="showScreen('shop')">Ver todo</button></div>
+  <div class="products" id="productGrid"></div>
+
+  <div class="divider-gold"></div>
+
+  <!-- BANNER OFFER -->
+  <div style="background:linear-gradient(145deg,#0F0E0C,#1E1A10,#2A2010);border-radius:22px;padding:26px 24px;text-align:center;margin-bottom:22px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:radial-gradient(circle,var(--gold) 0%,transparent 70%);opacity:0.08;"></div>
+    <div style="font-size:10px;color:var(--gold);font-weight:800;letter-spacing:3px;margin-bottom:10px;">⚡ OFERTA ESPECIAL</div>
+    <div style="font-size:26px;font-weight:900;color:#fff;margin-bottom:6px;letter-spacing:-.5px;">50% OFF en Accesorios</div>
+    <div style="color:#9A9080;font-size:12px;margin-bottom:20px;">Solo por tiempo limitado ✨</div>
+    <button class="btn-gold" onclick="filterCat(null,'accesorios');showScreen('shop')">Aprovechar →</button>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div class="screen" id="screen-shop">
+  <div style="display:flex;gap:10px;margin-bottom:18px;">
+    <input class="form-input" placeholder="🔍 Buscar productos..." id="searchInput" oninput="renderProducts()">
+    <button style="background:var(--white);border:2px solid var(--border);border-radius:12px;padding:0 14px;cursor:pointer;color:var(--muted);font-size:18px;flex-shrink:0;" onclick="goBack()">✕</button>
+  </div>
+  <div class="cats" style="margin-bottom:18px;">
+    <div class="cat active" onclick="filterCat(this,'all')"><div class="cat-name">Todo</div></div>
+    <div class="cat" onclick="filterCat(this,'ropa')"><div class="cat-name">👗 Ropa</div></div>
+    <div class="cat" onclick="filterCat(this,'zapatos')"><div class="cat-name">👟 Zapatos</div></div>
+    <div class="cat" onclick="filterCat(this,'accesorios')"><div class="cat-name">👜 Acces.</div></div>
+    <div class="cat" onclick="filterCat(this,'belleza')"><div class="cat-name">💄 Belleza</div></div>
+  </div>
+  <div class="products" id="shopGrid"></div>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="screen" id="screen-detail">
+  <button class="back-btn" onclick="historyBack()">← Volver</button>
+  <div class="detail-img" id="detailImg"><div class="emoji-lg">👗</div></div>
+  <div id="detailContent"></div>
+</div>
+
+<!-- CART -->
+<div class="screen" id="screen-cart">
+  <div style="font-size:20px;font-weight:900;margin-bottom:20px;">Mi Carrito 🛒</div>
+  <div id="cartItems"></div>
+  <div class="cart-total-box" id="cartTotal" style="display:none">
+    <div class="total-row"><span>Subtotal</span><span id="subtotalAmt">$0</span></div>
+    <div class="total-row"><span>Envío</span><span style="color:var(--gold);font-weight:800;">✓ Gratis</span></div>
+    <div class="total-row grand"><span>Total</span><span id="totalAmt">$0</span></div>
+    <button class="btn-gold" style="width:100%;margin-top:16px;padding:15px;font-size:14px;border-radius:14px;" onclick="showScreen('checkout')">Pagar Ahora →</button>
+    <button class="btn-outline" style="width:100%;margin-top:10px;padding:13px;font-size:13px;border-radius:14px;" onclick="showCuotasModal()">💳 Pagar en Cuotas</button>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="screen" id="screen-checkout">
+  <button class="back-btn" onclick="showScreen('cart')">← Carrito</button>
+  <div style="font-size:20px;font-weight:900;margin-bottom:22px;">Método de Pago 💳</div>
+  <div class="pay-method selected" id="pm-movil" onclick="selectPay('movil')">
+    <div class="pay-icon">📱</div>
+    <div><div class="pay-name">Pago Móvil</div><div class="pay-desc">Banesco, Mercantil, BDV...</div></div>
+    <div class="radio-dot on" id="rd-movil"></div>
+  </div>
+  <div class="pay-method" id="pm-transfer" onclick="selectPay('transfer')">
+    <div class="pay-icon">🏦</div>
+    <div><div class="pay-name">Transferencia Bancaria</div><div class="pay-desc">Cualquier banco nacional</div></div>
+    <div class="radio-dot" id="rd-transfer"></div>
+  </div>
+  <div class="pay-method" id="pm-efectivo" onclick="selectPay('efectivo')">
+    <div class="pay-icon">💵</div>
+    <div><div class="pay-name">Efectivo / Contra entrega</div><div class="pay-desc">Pago al recibir</div></div>
+    <div class="radio-dot" id="rd-efectivo"></div>
+  </div>
+  <div class="pay-method" id="pm-cuotas" onclick="selectPay('cuotas')">
+    <div class="pay-icon">📋</div>
+    <div><div class="pay-name">Pagar en Cuotas</div><div class="pay-desc">Sistema ELEUMHY Crédito</div></div>
+    <div class="radio-dot" id="rd-cuotas"></div>
+  </div>
+  <div id="payDetails" style="margin-top:18px;"></div>
+  <button class="btn-gold" style="width:100%;margin-top:18px;padding:15px;font-size:14px;border-radius:14px;" onclick="processPay()">Confirmar Pedido ✓</button>
+</div>
+
+<!-- PAYMENT -->
+<div class="screen" id="screen-payment">
+  <button class="back-btn" onclick="showScreen('checkout')">← Atrás</button>
+  <div style="text-align:center;margin-bottom:22px;">
+    <div style="font-size:18px;font-weight:900;">Datos de Pago Móvil</div>
+    <div style="color:var(--muted);font-size:12px;font-weight:500;">Realiza el pago y sube el comprobante</div>
+  </div>
+  <div class="qr-box">
+    <div class="qr-fake" id="qrGrid"></div>
+    <div style="font-size:11px;color:var(--muted);font-weight:500;">Escanea el QR o copia los datos</div>
+  </div>
+  <div class="copy-data"><div><div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;">TELÉFONO</div><div style="font-weight:800;font-size:14px;">0414-1234567</div></div><button class="copy-btn" onclick="copyData('0414-1234567')">Copiar</button></div>
+  <div class="copy-data"><div><div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;">CÉDULA</div><div style="font-weight:800;font-size:14px;">V-12.345.678</div></div><button class="copy-btn" onclick="copyData('V-12.345.678')">Copiar</button></div>
+  <div class="copy-data"><div><div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;">BANCO</div><div style="font-weight:800;font-size:14px;">Banesco 0134</div></div><button class="copy-btn" onclick="copyData('Banesco 0134')">Copiar</button></div>
+  <div class="copy-data"><div><div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;">MONTO</div><div style="font-weight:800;font-size:16px;color:var(--gold-dark);" id="pagoMonto">$0.00</div></div></div>
+  <div class="upload-zone" style="margin-top:18px;" onclick="uploadComprobante()">
+    <div style="font-size:32px;margin-bottom:10px;">📎</div>
+    <div style="font-weight:800;margin-bottom:4px;font-size:14px;">Subir Comprobante</div>
+    <div style="font-size:11px;color:var(--muted);">Toca para seleccionar imagen</div>
+  </div>
+  <div id="comprobanteUploaded" class="hidden" style="background:linear-gradient(135deg,var(--gold-pale),#FFF9E6);border:2px solid var(--gold);border-radius:var(--radius);padding:18px;margin-top:14px;text-align:center;">
+    <div style="color:var(--gold-dark);font-size:28px;margin-bottom:6px;">✓</div>
+    <div style="font-weight:800;color:var(--gold-dark);font-size:15px;">¡Comprobante enviado!</div>
+    <div style="font-size:11px;color:var(--muted);font-weight:500;margin-top:4px;">Tu pedido está siendo verificado 🎉</div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="screen-profile">
+  <div id="profileContent"></div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
+  <div class="auth-wrap">
+    <div class="auth-logo">ELEUMHY</div>
+    <div class="auth-sub">Bienvenida de vuelta ✨</div>
+    <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" type="email" id="loginEmail" placeholder="tu@correo.com"></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" type="password" id="loginPass" placeholder="••••••••"></div>
+    <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;margin-top:8px;border-radius:14px;" onclick="doLogin()">Entrar →</button>
+    <div class="auth-divider">o</div>
+    <div style="text-align:center;font-size:12px;color:var(--muted);font-weight:500;">¿No tienes cuenta? <span style="color:var(--gold);cursor:pointer;font-weight:800;" onclick="showScreen('register')">Regístrate gratis</span></div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="screen" id="screen-register">
+  <div class="auth-wrap" style="padding-top:30px;">
+    <div class="auth-logo">ELEUMHY</div>
+    <div class="auth-sub">Crea tu cuenta gratis 🛍</div>
+    <div class="form-group"><label class="form-label">Nombre completo</label><input class="form-input" id="regName" placeholder="María González"></div>
+    <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" type="email" id="regEmail" placeholder="tu@correo.com"></div>
+    <div class="form-group"><label class="form-label">Teléfono WhatsApp</label><input class="form-input" type="tel" id="regPhone" placeholder="0414-1234567"></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" type="password" id="regPass" placeholder="Mínimo 8 caracteres"></div>
+    <div class="form-group"><label class="form-label">Confirmar contraseña</label><input class="form-input" type="password" id="regPass2" placeholder="Repetir contraseña"></div>
+    <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="doRegister()">Crear Cuenta →</button>
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--muted);font-weight:500;">¿Ya tienes cuenta? <span style="color:var(--gold);cursor:pointer;font-weight:800;" onclick="showScreen('login')">Inicia sesión</span></div>
+  </div>
+</div>
+
+<!-- MY CUOTAS -->
+<div class="screen" id="screen-mycuotas">
+  <button class="back-btn" onclick="showScreen('profile')">← Volver</button>
+  <div style="font-size:20px;font-weight:900;margin-bottom:20px;">💳 Mis Cuotas</div>
+  <div class="notif warn"><div class="notif-title">⚠️ Cuota próxima a vencer</div><div class="notif-desc">Falda Floral — $25.00 vence en 3 días (15 Jun)</div></div>
+  <div style="background:var(--white);border-radius:var(--radius);border:1.5px solid var(--border);padding:18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><div style="font-weight:800;font-size:14px;">Vestido Elegante Negro</div><div class="debt-badge">Debe $45</div></div>
+    <div style="font-size:10px;color:var(--muted);font-weight:700;margin-bottom:12px;letter-spacing:.5px;">PLAN 3 CUOTAS · CUOTA 2 DE 3</div>
+    <div class="progress-bar"><div class="progress-bar-item done"></div><div class="progress-bar-item done"></div><div class="progress-bar-item"></div></div>
+    <button class="btn-gold" style="width:100%;padding:11px;font-size:13px;border-radius:10px;margin-top:14px;" onclick="showScreen('payment')">Pagar Cuota Ahora</button>
+  </div>
+  <div style="background:var(--white);border-radius:var(--radius);border:1.5px solid var(--border);padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><div style="font-weight:800;font-size:14px;">Zapatos Deportivos</div><div class="ok-badge">Al día ✓</div></div>
+    <div style="font-size:10px;color:var(--muted);font-weight:700;margin-bottom:12px;letter-spacing:.5px;">PLAN 6 CUOTAS · CUOTA 4 DE 6</div>
+    <div class="progress-bar"><div class="progress-bar-item done"></div><div class="progress-bar-item done"></div><div class="progress-bar-item done"></div><div class="progress-bar-item done"></div><div class="progress-bar-item"></div><div class="progress-bar-item"></div></div>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div class="screen" id="screen-orders">
+  <button class="back-btn" onclick="showScreen('profile')">← Volver</button>
+  <div style="font-size:20px;font-weight:900;margin-bottom:20px;">📦 Mis Pedidos</div>
+  <div class="cart-item">
+    <div class="cart-img" style="font-size:28px;">👗</div>
+    <div class="cart-details">
+      <div class="cart-name">Vestido Floral Verano</div>
+      <div class="cart-meta">Talla M · Color Rojo · Cant: 1</div>
+      <div class="cart-meta">Pedido #001 · 10 Jun 2025</div>
+      <div style="margin-top:8px;"><span class="ok-badge">Entregado ✓</span></div>
+    </div>
+    <div style="font-weight:800;color:var(--gold-dark);white-space:nowrap;">$38</div>
+  </div>
+  <div class="cart-item">
+    <div class="cart-img" style="font-size:28px;">👟</div>
+    <div class="cart-details">
+      <div class="cart-name">Sneakers Urbanas</div>
+      <div class="cart-meta">Talla 38 · Color Blanco · Cant: 1</div>
+      <div class="cart-meta">Pedido #002 · 20 May 2025</div>
+      <div style="margin-top:8px;"><span style="background:#FFF8E1;color:var(--warn);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:800;">En camino 🚚</span></div>
+    </div>
+    <div style="font-weight:800;color:var(--gold-dark);white-space:nowrap;">$65</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="screen" id="screen-admin">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">PANEL ADMIN</div>
+    <button class="back-btn" style="margin:0;" onclick="showScreen('profile')">✕ Salir</button>
+  </div>
+  <div class="admin-nav">
+    <div class="admin-tab active" onclick="adminTab(this,'dashboard')">📊 Dashboard</div>
+    <div class="admin-tab" onclick="adminTab(this,'products')">📦 Productos</div>
+    <div class="admin-tab" onclick="adminTab(this,'clients')">👥 Clientes</div>
+    <div class="admin-tab" onclick="adminTab(this,'cuotas-admin')">💳 Cuotas</div>
+    <div class="admin-tab" onclick="adminTab(this,'finanzas')">💰 Finanzas</div>
+    <div class="admin-tab" onclick="adminTab(this,'publicidad')">📣 Publicidad</div>
+    <div class="admin-tab" onclick="adminTab(this,'notificaciones')">🔔 Notifs</div>
+  </div>
+
+  <!-- DASHBOARD TAB -->
+  <div id="admin-dashboard" class="fade-in-up">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num" id="stat-visitas">247</div><div class="stat-label">Visitas hoy</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-ventas">$1,840</div><div class="stat-label">Ventas hoy</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-pedidos">18</div><div class="stat-label">Pedidos nuevos</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-cuotas">$320</div><div class="stat-label">Cuotas pend.</div></div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:20px;border:1.5px solid var(--border);margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Ventas esta semana</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gold);">▲ 23% vs anterior</div>
+      </div>
+      <div class="chart-bar-wrap" id="weekChart"></div>
+      <div class="chart-labels" id="weekLabels"></div>
+    </div>
+    <div style="font-weight:800;margin-bottom:14px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Pedidos recientes</div>
+    <div class="client-row">
+      <div class="avatar">MG</div>
+      <div class="client-info"><div class="client-name">María González</div><div class="client-meta">Vestido Floral · $38 · Pago Móvil</div></div>
+      <div class="ok-badge">✓ Pagado</div>
+    </div>
+    <div class="client-row">
+      <div class="avatar">JR</div>
+      <div class="client-info"><div class="client-name">Juan Rodríguez</div><div class="client-meta">Sneakers · $65 · Cuotas</div></div>
+      <div class="debt-badge">2 / 3</div>
+    </div>
+    <div class="client-row">
+      <div class="avatar">LP</div>
+      <div class="client-info"><div class="client-name">Luisa Pérez</div><div class="client-meta">Cartera Premium · $45 · Transferencia</div></div>
+      <div class="ok-badge">✓ Pagado</div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS TAB -->
+  <div id="admin-products" class="hidden fade-in-up">
+    <button class="btn-gold" style="width:100%;padding:13px;margin-bottom:18px;border-radius:12px;" onclick="showScreen('add-product')">+ Agregar Producto</button>
+    <div class="client-row">
+      <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">👗</div>
+      <div class="client-info"><div class="client-name">Vestido Floral Verano</div><div class="client-meta">Ropa · XS,S,M,L · Stock: 12</div></div>
+      <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$38</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
+    </div>
+    <div class="client-row">
+      <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">👟</div>
+      <div class="client-info"><div class="client-name">Sneakers Urbanas</div><div class="client-meta">Zapatos · 36-42 · Stock: 8</div></div>
+      <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$65</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
+    </div>
+    <div class="client-row">
+      <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">👜</div>
+      <div class="client-info"><div class="client-name">Cartera Premium</div><div class="client-meta">Accesorios · Stock: 5</div></div>
+      <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$45</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
+    </div>
+    <div style="margin-top:20px;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;">Colecciones</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div class="pill"><span class="gold-dot"></span>Verano 2025</div>
+      <div class="pill"><span class="gold-dot"></span>Básicos</div>
+      <div class="pill"><span class="gold-dot"></span>Ofertas</div>
+      <button style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;border:none;border-radius:20px;padding:5px 16px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;">+ Nueva</button>
+    </div>
+  </div>
+
+  <!-- CLIENTS TAB -->
+  <div id="admin-clients" class="hidden fade-in-up">
+    <input class="form-input" placeholder="🔍 Buscar cliente..." style="margin-bottom:16px;">
+    <div class="client-row">
+      <div class="avatar">MG</div>
+      <div class="client-info"><div class="client-name">María González</div><div class="client-meta">📱 0414-111-2222 · 2 compras · $103</div></div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+        <button class="ws-btn" onclick="openWs('58414112222')">📱 WS</button>
+        <div class="ok-badge">Al día</div>
+      </div>
+    </div>
+    <div class="client-row">
+      <div class="avatar">JR</div>
+      <div class="client-info"><div class="client-name">Juan Rodríguez</div><div class="client-meta">📱 0424-333-4444 · 1 compra · $65</div></div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+        <button class="ws-btn" onclick="openWs('58424334444')">📱 WS</button>
+        <div class="debt-badge">Debe $45</div>
+      </div>
+    </div>
+    <div class="client-row">
+      <div class="avatar">LP</div>
+      <div class="client-info"><div class="client-name">Luisa Pérez</div><div class="client-meta">📱 0416-555-6666 · Carrito abandonado</div></div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+        <button class="ws-btn" onclick="openWs('58416556666')">📱 WS</button>
+        <div style="background:#FFF8E1;color:var(--warn);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:800;">Carrito</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUOTAS ADMIN TAB -->
+  <div id="admin-cuotas-admin" class="hidden fade-in-up">
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;">Planes Activos</div>
+    <div class="cuota-plan"><div class="cuota-plan-title">Plan 3 Cuotas</div><div class="plan-detail">3 pagos iguales · 0% interés · Sin penalidad (5 días gracia)</div></div>
+    <div class="cuota-plan"><div class="cuota-plan-title">Plan 6 Cuotas</div><div class="plan-detail">6 pagos iguales · 5% interés · Penalidad $8 por retraso</div></div>
+    <div class="cuota-plan"><div class="cuota-plan-title">Plan 12 Cuotas</div><div class="plan-detail">12 pagos iguales · 15% interés · Penalidad $12 por retraso</div></div>
+    <button class="btn-outline" style="width:100%;margin-top:14px;padding:13px;border-radius:12px;">+ Crear Nuevo Plan</button>
+    <div class="divider-gold"></div>
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;">Cuotas Pendientes</div>
+    <div class="client-row">
+      <div class="avatar">JR</div>
+      <div class="client-info"><div class="client-name">Juan Rodríguez</div><div class="client-meta">Cuota 3/3 · Vence 20 Jun · $25</div></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;">
+        <div class="debt-badge">Pendiente</div>
+        <button class="ws-btn" onclick="openWs('58424334444')">Avisar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANZAS TAB -->
+  <div id="admin-finanzas" class="hidden fade-in-up">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num">$8,240</div><div class="stat-label">Ingresos mes</div></div>
+      <div class="stat-card"><div class="stat-num">$580</div><div class="stat-label">Por cobrar</div></div>
+      <div class="stat-card"><div class="stat-num">142</div><div class="stat-label">Ventas mes</div></div>
+      <div class="stat-card"><div class="stat-num">$58</div><div class="stat-label">Penalidades</div></div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius);padding:20px;border:1.5px solid var(--border);margin-bottom:18px;">
+      <div style="font-weight:800;margin-bottom:16px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Por método de pago</div>
+      <div style="display:flex;gap:10px;align-items:flex-end;height:90px;margin-bottom:10px;">
+        <div style="flex:2;background:linear-gradient(180deg,var(--gold-light),var(--gold));border-radius:6px 6px 0 0;height:80%;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:11px;color:#fff;font-weight:800;">72%</div>
+        <div style="flex:1;background:linear-gradient(180deg,var(--gold-pale),var(--border));border:1.5px solid var(--gold);border-radius:6px 6px 0 0;height:55%;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-size:11px;color:var(--gold-dark);font-weight:800;">20%</div>
+        <div style="flex:1;background:linear-gradient(180deg,var(--surface2),var(--border));border-radius:6px 6px 0 0;height:25%;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:11px;color:var(--muted);font-weight:800;">8%</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:2;text-align:center;font-size:10px;color:var(--muted);font-weight:700;">Pago Móvil</div>
+        <div style="flex:1;text-align:center;font-size:10px;color:var(--muted);font-weight:700;">Transfer</div>
+        <div style="flex:1;text-align:center;font-size:10px;color:var(--muted);font-weight:700;">Efectivo</div>
+      </div>
+    </div>
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;">Últimas transacciones</div>
+    <div class="copy-data" style="margin-bottom:8px;"><div><div style="font-size:10px;color:var(--muted);font-weight:700;">MARÍA G. · PAGO MÓVIL · 10 JUN</div><div style="font-weight:700;">Vestido Floral</div></div><div style="color:var(--gold-dark);font-weight:800;font-size:16px;">+$38</div></div>
+    <div class="copy-data"><div><div style="font-size:10px;color:var(--muted);font-weight:700;">JUAN R. · CUOTA 1/3 · 5 JUN</div><div style="font-weight:700;">Sneakers</div></div><div style="color:var(--gold-dark);font-weight:800;font-size:16px;">+$21</div></div>
+  </div>
+
+  <!-- PUBLICIDAD TAB -->
+  <div id="admin-publicidad" class="hidden fade-in-up">
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;">Banners Activos</div>
+    <div style="background:linear-gradient(145deg,#0F0E0C,#1E1A10);border-radius:var(--radius);padding:18px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div style="font-weight:800;color:#fff;font-size:14px;">Oferta 50% Accesorios</div><div style="font-size:11px;color:var(--gold);font-weight:600;">Banner Principal · Activo</div></div>
+      <div style="display:flex;gap:8px;"><button style="background:none;border:1.5px solid var(--muted);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;">✏️</button><button style="background:var(--danger);border:none;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:#fff;">🗑</button></div>
+    </div>
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:20px 0 14px;">Crear Anuncio</div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" placeholder="Gran descuento de fin de temporada"></div>
+    <div class="form-group"><label class="form-label">Posición</label><select class="form-input"><option>Banner Principal (Home)</option><option>Banner secundario</option><option>Pop-up al entrar</option></select></div>
+    <div class="upload-zone"><div style="font-size:28px;margin-bottom:8px;">🖼</div><div style="font-size:13px;font-weight:800;">Subir imagen del anuncio</div><div style="font-size:11px;color:var(--muted);">PNG, JPG, MP4</div></div>
+    <button class="btn-gold" style="width:100%;padding:13px;margin-top:16px;border-radius:12px;">Publicar Anuncio →</button>
+  </div>
+
+  <!-- NOTIFICACIONES TAB -->
+  <div id="admin-notificaciones" class="hidden fade-in-up">
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;">Recordatorios Automáticos</div>
+    <div style="background:var(--white);border-radius:12px;padding:16px;border:1.5px solid var(--border);margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><div style="font-weight:800;font-size:13px;">Recordatorio de cuota</div><div class="ok-badge">Activo</div></div>
+      <div style="font-size:12px;color:var(--muted);font-weight:500;">3 días antes del vencimiento por WhatsApp</div>
+    </div>
+    <div style="background:var(--white);border-radius:12px;padding:16px;border:1.5px solid var(--border);margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><div style="font-weight:800;font-size:13px;">Carrito abandonado</div><div class="ok-badge">Activo</div></div>
+      <div style="font-size:12px;color:var(--muted);font-weight:500;">24h después de abandonar el carrito</div>
+    </div>
+    <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;">Mensaje Masivo</div>
+    <div class="form-group"><label class="form-label">Segmento</label><select class="form-input"><option>Todos los clientes</option><option>Con deudas pendientes</option><option>Carritos abandonados</option></select></div>
+    <div class="form-group"><label class="form-label">Mensaje</label><textarea class="form-input" rows="3" placeholder="Hola {nombre}, te recordamos..."></textarea></div>
+    <button class="btn-gold" style="width:100%;padding:13px;border-radius:12px;" onclick="sendMassWS()">📱 Enviar por WhatsApp →</button>
+  </div>
+</div>
+
+<!-- ADD PRODUCT -->
+<div class="screen" id="screen-add-product">
+  <button class="back-btn" onclick="showScreen('admin')">← Productos</button>
+  <div style="font-size:20px;font-weight:900;margin-bottom:22px;">+ Nuevo Producto</div>
+  <div class="form-group"><label class="form-label">Nombre del producto</label><input class="form-input" placeholder="Ej: Vestido Floral Verano"></div>
+  <div class="form-group"><label class="form-label">Categoría</label><select class="form-input"><option>Ropa</option><option>Zapatos</option><option>Accesorios</option><option>Belleza</option></select></div>
+  <div class="form-group"><label class="form-label">Precio (USD)</label><input class="form-input" type="number" placeholder="0.00"></div>
+  <div class="form-group"><label class="form-label">Precio anterior (tachado)</label><input class="form-input" type="number" placeholder="Opcional"></div>
+  <div class="form-group"><label class="form-label">Tallas disponibles</label><input class="form-input" placeholder="XS, S, M, L, XL"></div>
+  <div class="form-group"><label class="form-label">Colores</label><input class="form-input" placeholder="Rojo, Azul, Negro"></div>
+  <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-input" rows="3" placeholder="Descripción del producto..."></textarea></div>
+  <div class="upload-zone" style="margin-bottom:18px;"><div style="font-size:28px;margin-bottom:8px;">📷</div><div style="font-size:13px;font-weight:800;">Subir Fotos del Producto</div><div style="font-size:11px;color:var(--muted);">PNG, JPG · Máx 5 fotos</div></div>
+  <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="saveProduct()">Publicar Producto →</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bnav-item active" id="bnav-home" onclick="showScreen('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    Inicio
+  </button>
+  <button class="bnav-item" id="bnav-shop" onclick="showScreen('shop')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Buscar
+  </button>
+  <button class="bnav-item" id="bnav-cart" onclick="showScreen('cart')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    Carrito
+  </button>
+  <button class="bnav-item" id="bnav-orders" onclick="showScreen('orders')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Pedidos
+  </button>
+  <button class="bnav-item" id="bnav-profile" onclick="showScreen('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Perfil
+  </button>
+</nav>
+
+<!-- MODAL CUOTAS (MEJORADO) -->
+<div class="modal-overlay hidden" id="cuotasModal" onclick="closeCuotasModal(event)">
+  <div class="modal slide-up" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div style="font-size:18px;font-weight:900;margin-bottom:4px;">💳 Plan de Cuotas</div>
+    <div style="color:var(--muted);font-size:12px;font-weight:500;margin-bottom:22px;">Total: <span id="modalTotal" style="color:var(--gold-dark);font-weight:800;">$0</span></div>
+
+    <!-- SLIDER -->
+    <div class="cuota-slider-wrap">
+      <label class="form-label">Número de cuotas: <span id="sliderVal" style="color:var(--gold-dark);">3</span></label>
+      <input type="range" class="cuota-slider" id="cuotaSlider" min="1" max="12" value="3" step="1" oninput="updateCuotaSlider()">
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--muted);font-weight:700;">
+        <span>1</span><span>3</span><span>6</span><span>12</span>
+      </div>
+    </div>
+
+    <!-- CUOTA PREVIEW -->
+    <div class="cuota-preview" id="cuotaPreview">
+      <div class="cuota-preview-item"><div class="cuota-preview-n">Cuota</div><div class="cuota-preview-v" id="prev-cuota">$0</div></div>
+      <div class="cuota-preview-item"><div class="cuota-preview-n">Interés</div><div class="cuota-preview-v" id="prev-interes">0%</div></div>
+      <div class="cuota-preview-item"><div class="cuota-preview-n">Total</div><div class="cuota-preview-v" id="prev-total">$0</div></div>
+    </div>
+
+    <!-- CUOTA TIMELINE -->
+    <div style="font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px;">Calendario de pagos</div>
+    <div class="cuota-timeline" id="cuotaTimeline"></div>
+
+    <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;margin-top:18px;" onclick="confirmarCuotas()">Confirmar Plan →</button>
+  </div>
+</div>
+
+<!-- CUOTAS INFO MODAL -->
+<div class="modal-overlay hidden" id="cuotasInfoModal" onclick="document.getElementById('cuotasInfoModal').classList.add('hidden')">
+  <div class="modal slide-up" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div style="font-size:18px;font-weight:900;margin-bottom:16px;">💳 Sistema de Cuotas ELEUMHY</div>
+    <div class="cuota-plan"><div class="cuota-plan-title">✅ Plan 3 Cuotas (0% interés)</div><div class="plan-detail">3 pagos iguales sin costo adicional. 5 días de gracia.</div></div>
+    <div class="cuota-plan"><div class="cuota-plan-title">📆 Plan 6 Cuotas (+5%)</div><div class="plan-detail">6 pagos con 5% de interés total. Ideal para montos medianos.</div></div>
+    <div class="cuota-plan"><div class="cuota-plan-title">📅 Plan 12 Cuotas (+15%)</div><div class="plan-detail">12 pagos mensuales. Máxima flexibilidad de pago.</div></div>
+    <div class="notif" style="margin-top:12px;"><div class="notif-title">ℹ️ Requisitos</div><div class="notif-desc">Cédula de identidad y número WhatsApp activo. Primera cuota al confirmar.</div></div>
+    <button class="btn-gold" style="width:100%;padding:14px;border-radius:14px;margin-top:16px;" onclick="document.getElementById('cuotasInfoModal').classList.add('hidden')">Entendido ✓</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const products = [
+  {id:1,name:'Vestido Floral Verano',price:38,old:55,cat:'ropa',emoji:'👗',badge:'NEW',sizes:['XS','S','M','L'],colors:['Rojo','Azul','Verde'],desc:'Vestido ligero ideal para el verano con estampado floral exclusivo. Tela 100% algodón.',model:'EL-2025-001'},
+  {id:2,name:'Sneakers Urbanas',price:65,old:null,cat:'zapatos',emoji:'👟',badge:'HOT',sizes:['36','37','38','39','40'],colors:['Blanco','Negro'],desc:'Zapatos deportivos con suela antideslizante y diseño urbano moderno. Plantilla ergonómica.',model:'EL-2025-010'},
+  {id:3,name:'Cartera Premium',price:45,old:60,cat:'accesorios',emoji:'👜',badge:'NEW',sizes:[],colors:['Negro','Café','Camel'],desc:'Cartera de cuero sintético de alta calidad con múltiples compartimentos y cierre magnético.',model:'EL-2025-020'},
+  {id:4,name:'Blusa Elegante',price:28,old:null,cat:'ropa',emoji:'👚',badge:null,sizes:['XS','S','M','L','XL'],colors:['Blanco','Negro','Rosa'],desc:'Blusa de tela fluida perfecta para cualquier ocasión. Corte holgado y moderno.',model:'EL-2025-005'},
+  {id:5,name:'Labial Mate Set',price:18,old:25,cat:'belleza',emoji:'💄',badge:'OFERTA',sizes:[],colors:['Rojo','Coral','Bordo'],desc:'Set de 3 labiales mate de larga duración con acabado premium. Colores perfectos para cada ocasión.',model:'EL-2025-B01'},
+  {id:6,name:'Jean Slim Fit',price:42,old:null,cat:'ropa',emoji:'👖',badge:null,sizes:['28','30','32','34'],colors:['Azul oscuro','Negro'],desc:'Jean de alta elasticidad con corte slim. Se adapta perfectamente a tu figura con máxima comodidad.',model:'EL-2025-007'},
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let cart = JSON.parse(localStorage.getItem('eleumhy_cart') || '[]');
+let wishlist = JSON.parse(localStorage.getItem('eleumhy_wish') || '[]');
+let currentCat = 'all';
+let currentPay = 'movil';
+let historyStack = ['home'];
+let currentUser = JSON.parse(localStorage.getItem('eleumhy_user') || 'null');
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById('screen-' + id);
+  if (s) { s.classList.add('active'); }
+  const bnavMap = {home:'home',shop:'shop',cart:'cart',orders:'orders',profile:'profile'};
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  if (bnavMap[id]) {
+    const btn = document.getElementById('bnav-' + bnavMap[id]);
+    if (btn) btn.classList.add('active');
+  }
+  if (id === 'cart') renderCart();
+  if (id === 'shop') renderShopGrid();
+  if (id === 'home') renderHomeGrid();
+  if (id === 'admin') renderWeekChart();
+  if (id === 'profile') renderProfile();
+  if (id !== historyStack[historyStack.length - 1]) historyStack.push(id);
+  window.scrollTo(0, 0);
+}
+
+function historyBack() {
+  if (historyStack.length > 1) {
+    historyStack.pop();
+    showScreen(historyStack[historyStack.length - 1]);
+  } else {
+    showScreen('home');
+  }
+}
+
+function goBack() { historyBack(); }
+function goSearch() { showScreen('shop'); setTimeout(() => { const i = document.getElementById('searchInput'); if (i) i.focus(); }, 150); }
+
+// ═══════════════════════════════════════
+// CATEGORIES & FILTER
+// ═══════════════════════════════════════
+function filterCat(el, cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderHomeGrid();
+  renderShopGrid();
+}
+
+function getFiltered() {
+  let list = products;
+  if (currentCat !== 'all') list = list.filter(p => p.cat === currentCat);
+  const q = document.getElementById('searchInput');
+  if (q && q.value) list = list.filter(p => p.name.toLowerCase().includes(q.value.toLowerCase()));
+  return list;
+}
+
+// ═══════════════════════════════════════
+// PRODUCT CARDS
+// ═══════════════════════════════════════
+function productCard(p) {
+  const inWish = wishlist.includes(p.id);
+  return `<div class="product-card" onclick="openDetail(${p.id})">
+    <div class="product-img">
+      <div class="emoji-fallback">${p.emoji}</div>
+      ${p.badge ? `<div class="product-badge ${p.badge==='HOT'?'hot':p.badge==='OFERTA'?'oferta':''}">${p.badge}</div>` : ''}
+    </div>
+    <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div><span class="product-price">$${p.price}</span>${p.old ? `<span class="product-old">$${p.old}</span>` : ''}</div>
+      <div class="product-actions">
+        <button class="btn-cart" onclick="event.stopPropagation();addToCart(${p.id})">+ Carrito</button>
+        <button class="btn-wish ${inWish ? 'active' : ''}" onclick="event.stopPropagation();toggleWish(${p.id},this)">${inWish ? '❤️' : '🤍'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHomeGrid() { const g = document.getElementById('productGrid'); if (g) g.innerHTML = getFiltered().slice(0, 6).map(productCard).join(''); }
+function renderShopGrid() { const g = document.getElementById('shopGrid'); if (g) g.innerHTML = getFiltered().map(productCard).join(''); }
+function renderProducts() { renderShopGrid(); }
+
+// ═══════════════════════════════════════
+// PRODUCT DETAIL
+// ═══════════════════════════════════════
+function openDetail(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const detailImg = document.getElementById('detailImg');
+  detailImg.innerHTML = `<div class="emoji-lg">${p.emoji}</div>`;
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-title">${p.name}</div>
+    <div style="color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Ref: ${p.model}</div>
+    <div class="detail-price">$${p.price}${p.old ? ` <span style="font-size:16px;font-weight:500;color:var(--muted);text-decoration:line-through;">$${p.old}</span>` : ''}</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.8;">${p.desc}</p>
+    ${p.sizes.length ? `<div class="attr-section"><div class="attr-label">Talla</div><div class="attr-options">${p.sizes.map((s,i) => `<div class="attr-chip${i===0?' selected':''}" onclick="this.parentNode.querySelectorAll('.attr-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">${s}</div>`).join('')}</div></div>` : ''}
+    ${p.colors.length ? `<div class="attr-section"><div class="attr-label">Color</div><div class="attr-options">${p.colors.map((c,i) => `<div class="attr-chip${i===0?' selected':''}" onclick="this.parentNode.querySelectorAll('.attr-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">${c}</div>`).join('')}</div></div>` : ''}
+    <div class="cuota-box">
+      <div class="cuota-title">💳 Disponible en cuotas</div>
+      <div class="cuota-desc">Desde $${(p.price/3).toFixed(2)}/mes · 3 cuotas sin interés</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn-gold" style="flex:1;padding:15px;font-size:14px;border-radius:14px;" onclick="addToCart(${p.id});showScreen('cart')">Agregar al carrito</button>
+      <button style="width:52px;height:52px;border-radius:14px;font-size:24px;border:2px solid var(--border);background:var(--white);cursor:pointer;transition:var(--transition);" onclick="toggleWishById(${p.id},this)">${wishlist.includes(p.id)?'❤️':'🤍'}</button>
+    </div>`;
+  showScreen('detail');
+}
+
+// ═══════════════════════════════════════
+// CART
+// ═══════════════════════════════════════
+function saveCart() { localStorage.setItem('eleumhy_cart', JSON.stringify(cart)); }
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const ex = cart.find(c => c.product.id === id);
+  if (ex) { ex.qty++; } else { cart.push({product:p,size:p.sizes[0]||'',color:p.colors[0]||'',qty:1}); }
+  saveCart();
+  updateCartBadge();
+  showToast('✓ Agregado al carrito', 'gold');
+  animateBtn();
+}
+
+function updateCartBadge() {
+  const total = cart.reduce((a, c) => a + c.qty, 0);
+  document.getElementById('cartBadge').textContent = total;
+}
+
+function renderCart() {
+  const c = document.getElementById('cartItems');
+  const t = document.getElementById('cartTotal');
+  if (!c) return;
+  if (cart.length === 0) {
+    c.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--muted);"><div style="font-size:48px;margin-bottom:16px;">🛒</div><div style="font-weight:800;font-size:16px;margin-bottom:8px;">Tu carrito está vacío</div><div style="font-size:13px;">Explora nuestra tienda y encuentra algo increíble</div><button class="btn-gold" style="margin-top:20px;padding:12px 28px;" onclick="showScreen(\'shop\')">Ver Tienda →</button></div>';
+    t.style.display = 'none';
+    return;
+  }
+  c.innerHTML = cart.map((item, i) => `<div class="cart-item">
+    <div class="cart-img" style="font-size:32px;">${item.product.emoji}</div>
+    <div class="cart-details">
+      <div class="cart-name">${item.product.name}</div>
+      <div class="cart-meta">${item.size ? 'Talla ' + item.size + ' · ' : ''}${item.color}</div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+        <span style="font-weight:800;min-width:20px;text-align:center;">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+        <button style="background:none;border:none;color:var(--danger);cursor:pointer;margin-left:auto;font-size:18px;" onclick="removeFromCart(${i})">🗑</button>
+      </div>
+    </div>
+    <div style="font-weight:800;color:var(--gold-dark);white-space:nowrap;font-size:16px;">$${(item.product.price*item.qty).toFixed(0)}</div>
+  </div>`).join('');
+  const sub = cart.reduce((a, c) => a + c.product.price * c.qty, 0);
+  document.getElementById('subtotalAmt').textContent = '$' + sub.toFixed(2);
+  document.getElementById('totalAmt').textContent = '$' + sub.toFixed(2);
+  document.getElementById('pagoMonto').textContent = '$' + sub.toFixed(2);
+  t.style.display = 'block';
+  const mt = document.getElementById('modalTotal');
+  if (mt) mt.textContent = '$' + sub.toFixed(2);
+}
+
+function changeQty(i, d) { cart[i].qty += d; if (cart[i].qty <= 0) cart.splice(i, 1); saveCart(); updateCartBadge(); renderCart(); }
+function removeFromCart(i) { cart.splice(i, 1); saveCart(); updateCartBadge(); renderCart(); showToast('Producto eliminado', 'red'); }
+
+// ═══════════════════════════════════════
+// WISHLIST
+// ═══════════════════════════════════════
+function toggleWish(id, btn) {
+  const idx = wishlist.indexOf(id);
+  if (idx > -1) { wishlist.splice(idx, 1); btn.textContent = '🤍'; btn.classList.remove('active'); }
+  else { wishlist.push(id); btn.textContent = '❤️'; btn.classList.add('active'); showToast('❤️ Añadido a favoritos', 'gold'); }
+  localStorage.setItem('eleumhy_wish', JSON.stringify(wishlist));
+}
+
+function toggleWishById(id, btn) {
+  const idx = wishlist.indexOf(id);
+  if (idx > -1) { wishlist.splice(idx, 1); btn.textContent = '🤍'; showToast('Eliminado de favoritos', 'red'); }
+  else { wishlist.push(id); btn.textContent = '❤️'; showToast('❤️ Añadido a favoritos', 'gold'); }
+  localStorage.setItem('eleumhy_wish', JSON.stringify(wishlist));
+}
+
+// ═══════════════════════════════════════
+// CHECKOUT & PAYMENT
+// ═══════════════════════════════════════
+function selectPay(method) {
+  currentPay = method;
+  ['movil','transfer','efectivo','cuotas'].forEach(m => {
+    document.getElementById('pm-' + m).classList.toggle('selected', m === method);
+    document.getElementById('rd-' + m).classList.toggle('on', m === method);
+  });
+  const msgs = {
+    movil: '📱 Al confirmar verás los datos de pago móvil para transferir',
+    transfer: '🏦 Recibirás los datos bancarios completos para transferir',
+    efectivo: '💵 El cobrador pasará al entregar tu pedido',
+    cuotas: '💳 Seleccionarás tu plan de cuotas flexible'
+  };
+  document.getElementById('payDetails').innerHTML = `<div class="notif"><div class="notif-desc">${msgs[method]}</div></div>`;
+}
+
+function processPay() {
+  if (currentPay === 'movil' || currentPay === 'transfer') showScreen('payment');
+  else if (currentPay === 'cuotas') showCuotasModal();
+  else { showToast('✅ ¡Pedido confirmado! Gracias', 'green'); cart = []; saveCart(); updateCartBadge(); setTimeout(() => showScreen('home'), 1000); }
+}
+
+function copyData(text) {
+  if (navigator.clipboard) { navigator.clipboard.writeText(text); }
+  showToast('✓ Copiado al portapapeles', 'gold');
+}
+
+function uploadComprobante() {
+  document.getElementById('comprobanteUploaded').classList.remove('hidden');
+  showToast('✅ Comprobante enviado', 'green');
+  setTimeout(() => { cart = []; saveCart(); updateCartBadge(); showScreen('home'); }, 3000);
+}
+
+// ═══════════════════════════════════════
+// CUOTAS MODAL (MEJORADO)
+// ═══════════════════════════════════════
+function showCuotasModal() {
+  renderCart();
+  const sub = cart.reduce((a, c) => a + c.product.price * c.qty, 0);
+  const mt = document.getElementById('modalTotal');
+  if (mt) mt.textContent = '$' + sub.toFixed(2);
+  document.getElementById('cuotasModal').classList.remove('hidden');
+  updateCuotaSlider();
+}
+
+function closeCuotasModal(e) {
+  if (e.target.id === 'cuotasModal') document.getElementById('cuotasModal').classList.add('hidden');
+}
+
+function updateCuotaSlider() {
+  const n = parseInt(document.getElementById('cuotaSlider').value);
+  document.getElementById('sliderVal').textContent = n;
+  const total = cart.reduce((a, c) => a + c.product.price * c.qty, 0);
+  const rates = {1:1,2:1,3:1,4:1.03,5:1.04,6:1.05,7:1.07,8:1.09,9:1.11,10:1.13,11:1.14,12:1.15};
+  const rate = rates[n] || 1.15;
+  const tf = total * rate;
+  const cu = tf / n;
+  const intPct = Math.round((rate - 1) * 100);
+  document.getElementById('prev-cuota').textContent = '$' + cu.toFixed(2);
+  document.getElementById('prev-interes').textContent = intPct + '%';
+  document.getElementById('prev-total').textContent = '$' + tf.toFixed(2);
+  // Update slider gradient
+  const pct = ((n - 1) / 11) * 100;
+  document.getElementById('cuotaSlider').style.background = `linear-gradient(90deg,var(--gold) ${pct}%,var(--border) ${pct}%)`;
+  // Timeline
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const today = new Date();
+  let timeline = '';
+  for (let i = 0; i < Math.min(n, 6); i++) {
+    const date = new Date(today.getFullYear(), today.getMonth() + i, today.getDate());
+    const label = `${date.getDate()} ${months[date.getMonth()]}`;
+    timeline += `<div class="cuota-row">
+      <div class="cuota-num ${i===0?'paid':''}">${i+1}</div>
+      <div style="flex:1;margin:0 12px;font-size:12px;font-weight:600;color:var(--muted);">${label}${i===0?' · Hoy':''}</div>
+      <div style="font-weight:800;color:var(--gold-dark);">$${cu.toFixed(2)}</div>
+    </div>`;
+  }
+  if (n > 6) timeline += `<div style="text-align:center;padding:10px;font-size:11px;color:var(--muted);font-weight:600;">... y ${n-6} cuotas más</div>`;
+  document.getElementById('cuotaTimeline').innerHTML = timeline;
+}
+
+function confirmarCuotas() {
+  const n = document.getElementById('cuotaSlider').value;
+  document.getElementById('cuotasModal').classList.add('hidden');
+  showToast(`✅ Plan de ${n} cuotas confirmado`, 'green');
+  requestNotifPermission();
+  setTimeout(() => { cart = []; saveCart(); updateCartBadge(); showScreen('home'); }, 2000);
+}
+
+function showCuotasInfo() {
+  document.getElementById('cuotasInfoModal').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════
+// AUTH — localStorage
+// ═══════════════════════════════════════
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
+  const users = JSON.parse(localStorage.getItem('eleumhy_users') || '[]');
+  const found = users.find(u => u.email === email && u.pass === pass);
+  if (!found) { showToast('Credenciales incorrectas', 'red'); return; }
+  currentUser = found;
+  localStorage.setItem('eleumhy_user', JSON.stringify(found));
+  showToast('✅ ¡Bienvenida de vuelta, ' + found.name.split(' ')[0] + '!', 'green');
+  showScreen('profile');
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  if (!name || !email || !pass) { showToast('Completa todos los campos', 'red'); return; }
+  if (pass !== pass2) { showToast('Las contraseñas no coinciden', 'red'); return; }
+  if (pass.length < 8) { showToast('Mínimo 8 caracteres', 'red'); return; }
+  const users = JSON.parse(localStorage.getItem('eleumhy_users') || '[]');
+  if (users.find(u => u.email === email)) { showToast('Correo ya registrado', 'red'); return; }
+  const user = {name, email, phone, pass, createdAt: new Date().toISOString()};
+  users.push(user);
+  localStorage.setItem('eleumhy_users', JSON.stringify(users));
+  currentUser = user;
+  localStorage.setItem('eleumhy_user', JSON.stringify(user));
+  showToast('🎉 ¡Cuenta creada exitosamente!', 'green');
+  showScreen('profile');
+}
+
+function doLogout() {
+  currentUser = null;
+  localStorage.removeItem('eleumhy_user');
+  showToast('Sesión cerrada', 'gold');
+  showScreen('home');
+}
+
+function renderProfile() {
+  const c = document.getElementById('profileContent');
+  if (!c) return;
+  if (currentUser) {
+    const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    c.innerHTML = `
+      <div class="profile-header">
+        <div class="profile-avatar">${initials}</div>
+        <div class="profile-name">${currentUser.name}</div>
+        <div class="profile-email">${currentUser.email}</div>
+        ${currentUser.phone ? `<div style="color:var(--muted);font-size:12px;margin-top:4px;">📱 ${currentUser.phone}</div>` : ''}
+      </div>
+      <div class="divider-gold"></div>
+      <div class="menu-item" onclick="showScreen('orders')"><span>📦 Mis Pedidos</span><span style="color:var(--muted);">→</span></div>
+      <div class="menu-item" onclick=""><span>❤️ Favoritos (${wishlist.length})</span><span style="color:var(--muted);">→</span></div>
+      <div class="menu-item" onclick="showScreen('mycuotas')"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>
+      <div class="menu-item" onclick="showScreen('admin')"><span>⚙️ Panel Administrador</span><span style="color:var(--gold);">→</span></div>
+      <div class="menu-item" onclick="requestNotifPermission()"><span>🔔 Activar Notificaciones</span><span style="color:var(--muted);">→</span></div>
+      <div class="divider-gold"></div>
+      <div class="menu-item" onclick="doLogout()" style="color:var(--danger);"><span>🚪 Cerrar Sesión</span><span>→</span></div>`;
+  } else {
+    c.innerHTML = `
+      <div style="text-align:center;padding:40px 0 20px;">
+        <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 14px;box-shadow:0 4px 20px var(--gold-glow);">👤</div>
+        <div style="font-size:20px;font-weight:900;margin-bottom:6px;">Inicia Sesión</div>
+        <div style="color:var(--muted);font-size:12px;font-weight:500;">Para ver tus pedidos y más</div>
+      </div>
+      <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;margin-bottom:12px;border-radius:14px;" onclick="showScreen('login')">Iniciar Sesión</button>
+      <button class="btn-outline" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="showScreen('register')">Crear Cuenta Gratis</button>
+      <div class="divider-gold"></div>
+      <div class="menu-item" onclick="showScreen('orders')"><span>📦 Mis Pedidos</span><span style="color:var(--muted);">→</span></div>
+      <div class="menu-item" onclick="showScreen('mycuotas')"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>
+      <div class="menu-item" onclick="showScreen('admin')"><span>⚙️ Panel Administrador</span><span style="color:var(--gold);">→</span></div>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════
+function adminTab(el, tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="admin-"]').forEach(t => { if (!t.id.startsWith('admin-nav')) t.classList.add('hidden'); });
+  const target = document.getElementById('admin-' + tab);
+  if (target) { target.classList.remove('hidden'); target.classList.add('fade-in-up'); }
+  if (tab === 'finanzas' || tab === 'dashboard') renderWeekChart();
+}
+
+function renderWeekChart() {
+  const vals = [120, 85, 200, 165, 240, 180, 320];
+  const days = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+  const max = Math.max(...vals);
+  const wc = document.getElementById('weekChart');
+  const wl = document.getElementById('weekLabels');
+  if (wc) wc.innerHTML = vals.map((v, i) => `<div class="chart-bar ${i===6?'today':''}" style="height:${(v/max*100)}%"></div>`).join('');
+  if (wl) wl.innerHTML = days.map(d => `<div class="chart-label">${d}</div>`).join('');
+}
+
+function openWs(phone) {
+  window.open(`https://wa.me/${phone}?text=Hola%2C%20te%20contactamos%20desde%20ELEUMHY%20%F0%9F%91%97`, '_blank');
+}
+
+function saveProduct() {
+  showToast('✅ ¡Producto publicado exitosamente!', 'green');
+  setTimeout(() => showScreen('admin'), 1500);
+}
+
+function sendMassWS() {
+  showToast('📱 Mensajes enviados por WhatsApp', 'green');
+}
+
+// ═══════════════════════════════════════
+// QR
+// ═══════════════════════════════════════
+function generateQR() {
+  const p = [1,1,1,0,1,1,1,1,0,0,1,0,0,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,0,1,0,1,1,1,0,0,0,0,1,0,1,0,0,0,0,1];
+  const qr = document.getElementById('qrGrid');
+  if (qr) qr.innerHTML = p.slice(0, 49).map(c => `<div class="qr-cell ${c?'':'w'}" style="aspect-ratio:1"></div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function showToast(msg, type = 'gold') {
+  const existing = document.querySelectorAll('.toast');
+  existing.forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { if (t.parentNode) t.remove(); }, 2800);
+}
+
+// ═══════════════════════════════════════
+// RIPPLE EFFECT
+// ═══════════════════════════════════════
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.btn-gold');
+  if (!btn) return;
+  const rect = btn.getBoundingClientRect();
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;`;
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+});
+
+function animateBtn() {
+  const badge = document.getElementById('cartBadge');
+  badge.style.transform = 'scale(1.5)';
+  setTimeout(() => badge.style.transform = 'scale(1)', 300);
+}
+
+// ═══════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════
+function requestNotifPermission() {
+  if ('Notification' in window && Notification.permission !== 'granted') {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') {
+        showToast('🔔 Notificaciones activadas', 'green');
+        scheduleNotif();
+      }
+    });
+  } else if (Notification.permission === 'granted') {
+    scheduleNotif();
+    showToast('🔔 Notificaciones ya activas', 'gold');
+  }
+}
+
+function scheduleNotif() {
+  if (Notification.permission === 'granted') {
+    setTimeout(() => {
+      new Notification('ELEUMHY 💳', {
+        body: 'Tu cuota de Vestido Elegante vence en 3 días. ¡No olvides pagar!',
+        icon: '📦',
+        tag: 'cuota-reminder'
+      });
+    }, 5000);
+  }
+}
+
+// ═══════════════════════════════════════
+// SERVICE WORKER (PWA)
+// ═══════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  const swCode = `
+const CACHE='eleumhy-v1';
+const ASSETS=[self.location.href];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+self.addEventListener('push',e=>{const d=e.data?e.data.text():'Nueva notificación de ELEUMHY';e.waitUntil(self.registration.showNotification('ELEUMHY',{body:d,icon:'/icon.png'}));});
+`;
+  const blob = new Blob([swCode], {type:'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+// PWA Install Banner
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.createElement('div');
+  banner.className = 'install-banner';
+  banner.id = 'installBanner';
+  banner.innerHTML = `
+    <div style="font-size:24px;">📱</div>
+    <div class="install-banner-text">Instala ELEUMHY en tu teléfono para acceso rápido</div>
+    <button class="btn-outline" style="border-color:rgba(255,255,255,0.5);color:#fff;padding:7px 14px;font-size:11px;white-space:nowrap;background:rgba(255,255,255,0.15);" onclick="installApp()">Instalar</button>
+    <button class="install-banner-close" onclick="document.getElementById('installBanner').remove()">✕</button>`;
+  document.body.appendChild(banner);
+  setTimeout(() => { if (document.getElementById('installBanner')) document.getElementById('installBanner').remove(); }, 10000);
+});
+
+function installApp() {
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('installBanner')?.remove(); }); }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+renderHomeGrid();
+renderShopGrid();
+generateQR();
+updateCartBadge();
+selectPay('movil');
+renderProfile();
+renderWeekChart();
+// Request notifications after 3 seconds if not asked
+setTimeout(() => { if ('Notification' in window && Notification.permission === 'default') requestNotifPermission(); }, 3000);
+</script>
+</body>
+</html>
