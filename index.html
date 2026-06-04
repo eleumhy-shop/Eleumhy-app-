@@ -49,7 +49,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--off-white);color:var(-
 .skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
 
 /* ── NAV ── */
-.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:calc(14px + env(safe-area-inset-top)) 20px 14px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
 .logo{font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:4px;}
 .nav-icons{display:flex;gap:12px;align-items:center;}
 .nav-icon{background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--transition);}
@@ -57,8 +57,8 @@ body{font-family:'Montserrat',sans-serif;background:var(--off-white);color:var(-
 .badge{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#fff;border-radius:50%;width:18px;height:18px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:800;border:2px solid var(--off-white);animation:pulse 2s infinite;}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;z-index:100;box-shadow:0 -4px 20px rgba(201,168,76,0.1);padding-bottom:env(safe-area-inset-bottom);}
-.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;gap:3px;cursor:pointer;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;font-family:'Montserrat',sans-serif;letter-spacing:.5px;position:relative;transition:var(--transition);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;z-index:100;box-shadow:0 -4px 20px rgba(201,168,76,0.1);padding-bottom:calc(env(safe-area-inset-bottom) + 12px);padding-top:10px;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:4px 4px 8px;gap:3px;cursor:pointer;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;font-family:'Montserrat',sans-serif;letter-spacing:.5px;position:relative;transition:var(--transition);}
 .bnav-item.active{color:var(--gold);}
 .bnav-item.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:3px;background:var(--gold);border-radius:0 0 4px 4px;}
 .bnav-item svg{width:22px;height:22px;transition:var(--transition);}
@@ -774,6 +774,15 @@ select.form-input{cursor:pointer;}
   </div>
 </div>
 
+<!-- ADMIN AUDIT -->
+<div class="screen" id="screen-admin-audit">
+  <div style="font-size:20px;font-weight:900;margin-bottom:22px;">Rastros de Auditoría</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Registro de todos los movimientos administrativos. Sólo visible para Nelsimar (Superadmin).</div>
+  <div id="adminAuditList" style="display:flex;flex-direction:column;gap:12px;">
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No hay registros aún.</div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="bnav-item active" id="bnav-home" onclick="showScreen('home')">
@@ -815,6 +824,10 @@ select.form-input{cursor:pointer;}
   <button class="bnav-item" id="bnav-admin-orders" onclick="showScreen('admin-orders')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
     Pedidos
+  </button>
+  <button class="bnav-item" id="bnav-admin-audit" onclick="showScreen('admin-audit')" style="display:none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    Rastros
   </button>
 </nav>
 
@@ -902,7 +915,7 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const s = document.getElementById('screen-' + id);
   if (s) { s.classList.add('active'); }
-  const bnavMap = {home:'home',shop:'shop',cart:'cart',orders:'orders',profile:'profile', 'admin':'admin', 'add-product':'admin-products', 'admin-collections':'admin-collections', 'admin-orders':'admin-orders'};
+  const bnavMap = {home:'home',shop:'shop',cart:'cart',orders:'orders',profile:'profile', 'admin':'admin', 'add-product':'admin-products', 'admin-collections':'admin-collections', 'admin-orders':'admin-orders', 'admin-audit':'admin-audit'};
   document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
   if (bnavMap[id]) {
     const btn = document.getElementById('bnav-' + bnavMap[id]);
@@ -914,6 +927,7 @@ function showScreen(id) {
   if (id === 'admin') renderWeekChart();
   if (id === 'profile') renderProfile();
   if (id === 'admin-collections' || id === 'admin-orders') loadAdminData();
+  if (id === 'admin-audit') loadAuditData();
   if (id !== historyStack[historyStack.length - 1]) historyStack.push(id);
   window.scrollTo(0, 0);
 }
@@ -1192,11 +1206,15 @@ async function checkSession() {
         email: session.user.email,
         phone: profile.phone,
         isAdmin: profile.role === 'admin',
+        isSuperAdmin: profile.is_superadmin === true,
         level: profile.level
       };
       if (currentUser.isAdmin) {
         document.getElementById('bottomNav').style.display = 'none';
         document.getElementById('adminNav').style.display = 'flex';
+        if (currentUser.isSuperAdmin) {
+          document.getElementById('bnav-admin-audit').style.display = 'flex';
+        }
       } else {
         document.getElementById('bottomNav').style.display = 'flex';
         document.getElementById('adminNav').style.display = 'none';
@@ -1210,17 +1228,26 @@ async function checkSession() {
 }
 
 async function doLogin() {
+  if (!sbClient) { showToast('Error de red', 'red'); return; }
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   
-  // 🚀 BACKDOOR TEMPORAL: ENTRAR CON CUALQUIER COSA COMO ADMIN
-  currentUser = { id: 'dev-admin', name: "Admin Dev", email: email || 'admin', isAdmin: true };
-  document.getElementById('bottomNav').style.display = 'none';
-  document.getElementById('adminNav').style.display = 'flex';
-  showToast('Modo Desarrollador Admin', 'gold');
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPass').value = '';
-  showScreen('admin');
+  const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pass });
+  if (error) { showToast('Credenciales incorrectas', 'red'); return; }
+  
+  await checkSession();
+  if(currentUser) {
+    showToast('✅ ¡Bienvenida, ' + currentUser.name.split(' ')[0] + '!', 'green');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPass').value = '';
+    if (currentUser.isAdmin) showScreen('admin');
+    else showScreen('profile');
+  }
+}
+
+function goSearch() {
+  showScreen('shop');
 }
 
 async function doRegister() {
@@ -1238,8 +1265,20 @@ async function doRegister() {
   if (error) { showToast(error.message, 'red'); return; }
   
   if (data.user) {
-    const role = (email === 'admin@eleumhy.com') ? 'admin' : 'customer';
-    await sbClient.from('profiles').insert({ id: data.user.id, name, phone, role });
+    let role = 'customer';
+    let isSuperAdmin = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Nelsimar = SuperAdmin
+    if (email === 'eleumhy@gmail.com') {
+      role = 'admin';
+      isSuperAdmin = true;
+    } else if (urlParams.get('invite') === 'admin2026' || email === 'admin@eleumhy.com') {
+      // Regular Admin
+      role = 'admin';
+    }
+    
+    await sbClient.from('profiles').insert({ id: data.user.id, name, phone, role, is_superadmin: isSuperAdmin });
     await checkSession();
     showToast('🎉 ¡Cuenta creada exitosamente!', 'green');
     if(currentUser && currentUser.isAdmin) showScreen('admin');
@@ -1459,6 +1498,34 @@ function handleProductImageUpload(event) {
   reader.readAsDataURL(file);
 }
 
+async function logAudit(action, details) {
+  if (!sbClient || !currentUser || !currentUser.isAdmin) return;
+  await sbClient.from('audit_logs').insert({ admin_id: currentUser.id, action, details });
+}
+
+async function loadAuditData() {
+  if (!sbClient || !currentUser?.isSuperAdmin) return;
+  const { data: logs } = await sbClient.from('audit_logs').select('*, profiles(name)').order('created_at', { ascending: false }).limit(50);
+  const list = document.getElementById('adminAuditList');
+  if (logs && logs.length > 0) {
+    list.innerHTML = logs.map(l => {
+      const d = new Date(l.created_at).toLocaleString();
+      return `
+        <div style="background:var(--white);padding:14px;border-radius:12px;border:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-weight:800;font-size:13px;">${l.profiles?.name || 'Admin'}</div>
+            <div style="font-size:10px;color:var(--muted);">${d}</div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:var(--gold-dark);">${l.action}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">${l.details}</div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No hay registros de auditoría aún.</div>';
+  }
+}
+
 async function saveProduct() {
   const name = document.getElementById('addProdName').value.trim();
   const cat = document.getElementById('addProdCat').value.toLowerCase();
@@ -1501,6 +1568,7 @@ async function saveProduct() {
         name, category: cat, price, stock, sizes, colors, description: desc, image_url: imageUrl, allows_installments: allowsInst, max_installments: maxInst, late_fee_pct: lateFee
       });
       if (error) throw error;
+      logAudit('Creó un producto', `Añadió el producto: ${name} ($${price}) con stock ${stock}`);
     }
 
     showToast('✅ Producto publicado', 'green');
@@ -1534,6 +1602,7 @@ async function saveCollection() {
     if (sbClient) {
       const { error } = await sbClient.from('collections').insert({ name, color_dot: color });
       if (error) throw error;
+      logAudit('Creó una colección', `Añadió la colección: ${name}`);
     }
     showToast('✅ Colección creada', 'green');
     document.getElementById('addColName').value = '';
@@ -1594,6 +1663,7 @@ async function deleteCollection(id) {
   if(!confirm('¿Estás seguro de eliminar esta colección?')) return;
   if (sbClient) {
     await sbClient.from('collections').delete().eq('id', id);
+    logAudit('Eliminó una colección', `Eliminó la colección ID: ${id}`);
     loadAdminData();
     showToast('Colección eliminada', 'gold');
   }
