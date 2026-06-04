@@ -810,9 +810,9 @@ const products = [
 // ═══════════════════════════════════════
 const _SUPABASE_URL = 'https://jglskueqqyaoehayzgke.supabase.co';
 const _SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnbHNrdWVxcXlhb2VoYXl6Z2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MzAwMjcsImV4cCI6MjA5NjEwNjAyN30.9PW0eDH4DndkOudoEBBCktVYTz5609Dlbn5-4SMTcR8';
-let supabase = null;
+let sbClient = null;
 if (window.supabase) {
-  supabase = window.supabase.createClient(_SUPABASE_URL, _SUPABASE_KEY);
+  sbClient = window.supabase.createClient(_SUPABASE_URL, _SUPABASE_KEY);
 }
 
 // ═══════════════════════════════════════
@@ -1110,10 +1110,10 @@ function showCuotasInfo() {
 // AUTH — Supabase
 // ═══════════════════════════════════════
 async function checkSession() {
-  if (!supabase) return;
-  const { data: { session } } = await supabase.auth.getSession();
+  if (!sbClient) return;
+  const { data: { session } } = await sbClient.auth.getSession();
   if (session) {
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+    const { data: profile } = await sbClient.from('profiles').select('*').eq('id', session.user.id).single();
     if (profile) {
       currentUser = {
         id: session.user.id,
@@ -1136,12 +1136,12 @@ async function checkSession() {
 }
 
 async function doLogin() {
-  if (!supabase) { showToast('Error de red', 'red'); return; }
+  if (!sbClient) { showToast('Error de red', 'red'); return; }
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pass });
   if (error) { showToast('Credenciales incorrectas', 'red'); return; }
   
   await checkSession();
@@ -1155,7 +1155,7 @@ async function doLogin() {
 }
 
 async function doRegister() {
-  if (!supabase) { showToast('Error de red', 'red'); return; }
+  if (!sbClient) { showToast('Error de red', 'red'); return; }
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const phone = document.getElementById('regPhone').value.trim();
@@ -1165,12 +1165,12 @@ async function doRegister() {
   if (pass !== pass2) { showToast('Las contraseñas no coinciden', 'red'); return; }
   if (pass.length < 6) { showToast('Mínimo 6 caracteres', 'red'); return; }
   
-  const { data, error } = await supabase.auth.signUp({ email, password: pass });
+  const { data, error } = await sbClient.auth.signUp({ email, password: pass });
   if (error) { showToast(error.message, 'red'); return; }
   
   if (data.user) {
     const role = (email === 'admin@eleumhy.com') ? 'admin' : 'customer';
-    await supabase.from('profiles').insert({ id: data.user.id, name, phone, role });
+    await sbClient.from('profiles').insert({ id: data.user.id, name, phone, role });
     await checkSession();
     showToast('🎉 ¡Cuenta creada exitosamente!', 'green');
     if(currentUser && currentUser.isAdmin) showScreen('admin');
@@ -1179,7 +1179,7 @@ async function doRegister() {
 }
 
 async function doLogout() {
-  await supabase.auth.signOut();
+  await sbClient.auth.signOut();
   currentUser = null;
   const bnav = document.querySelector('.bottom-nav');
   if (bnav) bnav.style.display = 'flex';
