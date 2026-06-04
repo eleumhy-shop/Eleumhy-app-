@@ -460,7 +460,13 @@ select.form-input{cursor:pointer;}
     <div class="auth-logo">ELEUMHY</div>
     <div class="auth-sub">Bienvenida de vuelta ✨</div>
     <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" type="email" id="loginEmail" placeholder="tu@correo.com"></div>
-    <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" type="password" id="loginPass" placeholder="••••••••"></div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <div style="position:relative;">
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" style="padding-right:45px;">
+        <button type="button" onclick="togglePass('loginPass', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);">👁️</button>
+      </div>
+    </div>
     <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;margin-top:8px;border-radius:14px;" onclick="doLogin()">Entrar →</button>
     <div class="auth-divider">o</div>
     <div style="text-align:center;font-size:12px;color:var(--muted);font-weight:500;">¿No tienes cuenta? <span style="color:var(--gold);cursor:pointer;font-weight:800;" onclick="showScreen('register')">Regístrate gratis</span></div>
@@ -475,8 +481,20 @@ select.form-input{cursor:pointer;}
     <div class="form-group"><label class="form-label">Nombre completo</label><input class="form-input" id="regName" placeholder="María González"></div>
     <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" type="email" id="regEmail" placeholder="tu@correo.com"></div>
     <div class="form-group"><label class="form-label">Teléfono WhatsApp</label><input class="form-input" type="tel" id="regPhone" placeholder="0414-1234567"></div>
-    <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" type="password" id="regPass" placeholder="Mínimo 8 caracteres"></div>
-    <div class="form-group"><label class="form-label">Confirmar contraseña</label><input class="form-input" type="password" id="regPass2" placeholder="Repetir contraseña"></div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <div style="position:relative;">
+        <input class="form-input" type="password" id="regPass" placeholder="Mínimo 6 caracteres" style="padding-right:45px;">
+        <button type="button" onclick="togglePass('regPass', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirmar contraseña</label>
+      <div style="position:relative;">
+        <input class="form-input" type="password" id="regPass2" placeholder="Repetir contraseña" style="padding-right:45px;">
+        <button type="button" onclick="togglePass('regPass2', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);">👁️</button>
+      </div>
+    </div>
     <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="doRegister()">Crear Cuenta →</button>
     <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--muted);font-weight:500;">¿Ya tienes cuenta? <span style="color:var(--gold);cursor:pointer;font-weight:800;" onclick="showScreen('login')">Inicia sesión</span></div>
   </div>
@@ -1234,7 +1252,10 @@ async function doLogin() {
   if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   
   const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pass });
-  if (error) { showToast('Credenciales incorrectas', 'red'); return; }
+  if (error) { 
+    showToast('Credenciales incorrectas', 'red'); 
+    return; 
+  }
   
   await checkSession();
   if(currentUser) {
@@ -1243,6 +1264,17 @@ async function doLogin() {
     document.getElementById('loginPass').value = '';
     if (currentUser.isAdmin) showScreen('admin');
     else showScreen('profile');
+  }
+}
+
+function togglePass(id, btn) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
   }
 }
 
