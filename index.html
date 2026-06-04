@@ -11,6 +11,8 @@
 <title>ELEUMHY — Moda Premium</title>
 <link rel="manifest" href="./manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -804,6 +806,13 @@ const products = [
 ];
 
 // ═══════════════════════════════════════
+// SUPABASE CLIENT INIT
+// ═══════════════════════════════════════
+const _SUPABASE_URL = 'https://jglskueqqyaoehayzgke.supabase.co';
+const _SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnbHNrdWVxcXlhb2VoYXl6Z2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MzAwMjcsImV4cCI6MjA5NjEwNjAyN30.9PW0eDH4DndkOudoEBBCktVYTz5609Dlbn5-4SMTcR8';
+const supabase = window.supabase.createClient(_SUPABASE_URL, _SUPABASE_KEY);
+
+// ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
 let cart = JSON.parse(localStorage.getItem('eleumhy_cart') || '[]');
@@ -1095,35 +1104,52 @@ function showCuotasInfo() {
 }
 
 // ═══════════════════════════════════════
-// AUTH — localStorage
+// AUTH — Supabase
 // ═══════════════════════════════════════
-function doLogin() {
+async function checkSession() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+    if (profile) {
+      currentUser = {
+        id: session.user.id,
+        name: profile.name,
+        email: session.user.email,
+        phone: profile.phone,
+        isAdmin: profile.role === 'admin',
+        level: profile.level
+      };
+      if (currentUser.isAdmin) {
+        const bnav = document.querySelector('.bottom-nav');
+        if (bnav) bnav.style.display = 'none';
+      }
+    }
+  } else {
+    currentUser = null;
+    const bnav = document.querySelector('.bottom-nav');
+    if (bnav) bnav.style.display = 'flex';
+  }
+}
+
+async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   
-  // Admin Check
-  if (email === 'admin@eleumhy.com' && pass === 'admin123') {
-    currentUser = { name: "Administrador", email, phone: "-", isAdmin: true };
-    localStorage.setItem('eleumhy_user', JSON.stringify(currentUser));
-    showToast('Bienvenido Admin', 'gold');
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  if (error) { showToast('Credenciales incorrectas', 'red'); return; }
+  
+  await checkSession();
+  if(currentUser) {
+    showToast('✅ ¡Bienvenida de vuelta, ' + currentUser.name.split(' ')[0] + '!', 'green');
     document.getElementById('loginEmail').value = '';
     document.getElementById('loginPass').value = '';
-    showScreen('profile');
-    renderProfile();
-    return;
+    if (currentUser.isAdmin) showScreen('admin');
+    else showScreen('profile');
   }
-
-  const users = JSON.parse(localStorage.getItem('eleumhy_users') || '[]');
-  const found = users.find(u => u.email === email && u.pass === pass);
-  if (!found) { showToast('Credenciales incorrectas', 'red'); return; }
-  currentUser = found;
-  localStorage.setItem('eleumhy_user', JSON.stringify(found));
-  showToast('✅ ¡Bienvenida de vuelta, ' + found.name.split(' ')[0] + '!', 'green');
-  showScreen('profile');
 }
 
-function doRegister() {
+async function doRegister() {
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const phone = document.getElementById('regPhone').value.trim();
@@ -1131,24 +1157,26 @@ function doRegister() {
   const pass2 = document.getElementById('regPass2').value;
   if (!name || !email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   if (pass !== pass2) { showToast('Las contraseñas no coinciden', 'red'); return; }
-  if (pass.length < 8) { showToast('Mínimo 8 caracteres', 'red'); return; }
+  if (pass.length < 6) { showToast('Mínimo 6 caracteres', 'red'); return; }
   
-  if (email === 'admin@eleumhy.com') { showToast('Este correo es reservado', 'red'); return; }
-
-  const users = JSON.parse(localStorage.getItem('eleumhy_users') || '[]');
-  if (users.find(u => u.email === email)) { showToast('Correo ya registrado', 'red'); return; }
-  const user = {name, email, phone, pass, createdAt: new Date().toISOString(), isAdmin: false};
-  users.push(user);
-  localStorage.setItem('eleumhy_users', JSON.stringify(users));
-  currentUser = user;
-  localStorage.setItem('eleumhy_user', JSON.stringify(user));
-  showToast('🎉 ¡Cuenta creada exitosamente!', 'green');
-  showScreen('profile');
+  const { data, error } = await supabase.auth.signUp({ email, password: pass });
+  if (error) { showToast(error.message, 'red'); return; }
+  
+  if (data.user) {
+    const role = (email === 'admin@eleumhy.com') ? 'admin' : 'customer';
+    await supabase.from('profiles').insert({ id: data.user.id, name, phone, role });
+    await checkSession();
+    showToast('🎉 ¡Cuenta creada exitosamente!', 'green');
+    if(currentUser && currentUser.isAdmin) showScreen('admin');
+    else showScreen('profile');
+  }
 }
 
-function doLogout() {
+async function doLogout() {
+  await supabase.auth.signOut();
   currentUser = null;
-  localStorage.removeItem('eleumhy_user');
+  const bnav = document.querySelector('.bottom-nav');
+  if (bnav) bnav.style.display = 'flex';
   showToast('Sesión cerrada', 'gold');
   showScreen('home');
 }
@@ -1396,15 +1424,19 @@ function installApp() {
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
-renderHomeGrid();
-renderShopGrid();
-generateQR();
-updateCartBadge();
-selectPay('movil');
-renderProfile();
-renderWeekChart();
-// Request notifications after 3 seconds if not asked
-setTimeout(() => { if ('Notification' in window && Notification.permission === 'default') requestNotifPermission(); }, 3000);
+async function initApp() {
+  await checkSession();
+  renderHomeGrid();
+  renderShopGrid();
+  generateQR();
+  updateCartBadge();
+  selectPay('movil');
+  if (currentUser && currentUser.isAdmin) showScreen('admin');
+  else renderProfile();
+  renderWeekChart();
+  setTimeout(() => { if ('Notification' in window && Notification.permission === 'default') requestNotifPermission(); }, 3000);
+}
+initApp();
 </script>
 </body>
 </html>
