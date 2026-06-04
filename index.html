@@ -810,7 +810,10 @@ const products = [
 // ═══════════════════════════════════════
 const _SUPABASE_URL = 'https://jglskueqqyaoehayzgke.supabase.co';
 const _SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnbHNrdWVxcXlhb2VoYXl6Z2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MzAwMjcsImV4cCI6MjA5NjEwNjAyN30.9PW0eDH4DndkOudoEBBCktVYTz5609Dlbn5-4SMTcR8';
-const supabase = window.supabase.createClient(_SUPABASE_URL, _SUPABASE_KEY);
+let supabase = null;
+if (window.supabase) {
+  supabase = window.supabase.createClient(_SUPABASE_URL, _SUPABASE_KEY);
+}
 
 // ═══════════════════════════════════════
 // STATE
@@ -1107,6 +1110,7 @@ function showCuotasInfo() {
 // AUTH — Supabase
 // ═══════════════════════════════════════
 async function checkSession() {
+  if (!supabase) return;
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
     const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
@@ -1132,6 +1136,7 @@ async function checkSession() {
 }
 
 async function doLogin() {
+  if (!supabase) { showToast('Error de red', 'red'); return; }
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
@@ -1150,6 +1155,7 @@ async function doLogin() {
 }
 
 async function doRegister() {
+  if (!supabase) { showToast('Error de red', 'red'); return; }
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const phone = document.getElementById('regPhone').value.trim();
@@ -1425,16 +1431,20 @@ function installApp() {
 // INIT
 // ═══════════════════════════════════════
 async function initApp() {
-  await checkSession();
-  renderHomeGrid();
-  renderShopGrid();
-  generateQR();
-  updateCartBadge();
-  selectPay('movil');
-  if (currentUser && currentUser.isAdmin) showScreen('admin');
-  else renderProfile();
-  renderWeekChart();
-  setTimeout(() => { if ('Notification' in window && Notification.permission === 'default') requestNotifPermission(); }, 3000);
+  try {
+    await checkSession();
+    renderHomeGrid();
+    renderShopGrid();
+    generateQR();
+    updateCartBadge();
+    selectPay('movil');
+    if (currentUser && currentUser.isAdmin) showScreen('admin');
+    else renderProfile();
+    renderWeekChart();
+    setTimeout(() => { if ('Notification' in window && Notification.permission === 'default') requestNotifPermission(); }, 3000);
+  } catch (err) {
+    alert("Error de inicio: " + err.message);
+  }
 }
 initApp();
 </script>
