@@ -238,6 +238,20 @@ input[type="password"]::-ms-clear { display: none !important; visibility: hidden
 .cuota-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
 .cuota-num.paid{background:linear-gradient(135deg,#1DA851,#25D366);}
 
+/* ── MODALS (Custom Native Style) ── */
+.custom-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity 0.25s ease;}
+.custom-modal-overlay.active{opacity:1;pointer-events:auto;}
+.custom-modal-box{background:var(--white);border-radius:24px;width:90%;max-width:320px;padding:24px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);transform:scale(0.95);opacity:0;transition:all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);}
+.custom-modal-overlay.active .custom-modal-box{transform:scale(1);opacity:1;}
+.cm-title{font-size:18px;font-weight:900;color:var(--text);margin-bottom:8px;}
+.cm-desc{font-size:13px;font-weight:500;color:var(--muted);line-height:1.5;margin-bottom:24px;}
+.cm-actions{display:flex;gap:12px;}
+.cm-btn{flex:1;padding:14px;border-radius:14px;font-size:13px;font-weight:800;cursor:pointer;border:none;font-family:'Montserrat',sans-serif;transition:var(--transition);}
+.cm-btn-cancel{background:var(--surface);color:var(--text);border:2px solid var(--border);}
+.cm-btn-cancel:hover{background:#e5e5e5;}
+.cm-btn-confirm{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff;box-shadow:0 4px 15px var(--gold-glow);}
+.cm-btn-confirm.danger{background:linear-gradient(135deg,#DC2626,#EF4444);box-shadow:0 4px 15px rgba(239,68,68,0.3);}
+
 /* ── AUTH ── */
 .auth-wrap{padding:50px 0 80px;}
 .auth-logo{font-size:40px;font-weight:900;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:5px;margin-bottom:8px;text-align:center;}
@@ -590,6 +604,15 @@ input[type="password"]::-ms-clear { display: none !important; visibility: hidden
       <div class="chart-bar-wrap" id="weekChart"></div>
       <div class="chart-labels" id="weekLabels"></div>
     </div>
+    
+    <div style="background:var(--white);border-radius:var(--radius);padding:20px;border:1.5px solid var(--border);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-weight:900;font-size:14px;margin-bottom:4px;">👮‍♂️ Equipo Administrativo</div>
+        <div style="font-size:11px;color:var(--muted);">Invita a otro administrador usando un enlace seguro.</div>
+      </div>
+      <button class="btn-outline" style="padding:8px 14px;font-size:11px;white-space:nowrap;" onclick="copyAdminLink()">Copiar Enlace</button>
+    </div>
+
     <div style="font-weight:800;margin-bottom:14px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">Pedidos recientes</div>
     <div class="client-row">
       <div class="avatar">MG</div>
@@ -611,20 +634,8 @@ input[type="password"]::-ms-clear { display: none !important; visibility: hidden
   <!-- PRODUCTS TAB -->
   <div id="admin-products" class="hidden fade-in-up">
     <button class="btn-gold" style="width:100%;padding:13px;margin-bottom:18px;border-radius:12px;" onclick="showScreen('add-product')">+ Agregar Producto</button>
-    <div class="client-row">
-      <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">👗</div>
-      <div class="client-info"><div class="client-name">Vestido Floral Verano</div><div class="client-meta">Ropa · XS,S,M,L · Stock: 12</div></div>
-      <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$38</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
-    </div>
-    <div class="client-row">
-      <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">👟</div>
-      <div class="client-info"><div class="client-name">Sneakers Urbanas</div><div class="client-meta">Zapatos · 36-42 · Stock: 8</div></div>
-      <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$65</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
-    </div>
-    <div class="client-row">
-      <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">👜</div>
-      <div class="client-info"><div class="client-name">Cartera Premium</div><div class="client-meta">Accesorios · Stock: 5</div></div>
-      <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$45</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
+    <div id="adminProductList">
+      <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Cargando productos...</div>
     </div>
     <div style="margin-top:20px;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;">Colecciones</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -905,20 +916,58 @@ input[type="password"]::-ms-clear { display: none !important; visibility: hidden
     <div class="notif" style="margin-top:12px;"><div class="notif-title">ℹ️ Requisitos</div><div class="notif-desc">Cédula de identidad y número WhatsApp activo. Primera cuota al confirmar.</div></div>
     <button class="btn-gold" style="width:100%;padding:14px;border-radius:14px;margin-top:16px;" onclick="document.getElementById('cuotasInfoModal').classList.add('hidden')">Entendido ✓</button>
   </div>
+<!-- CUSTOM NATIVE MODAL -->
+<div class="custom-modal-overlay" id="eleumhyModal">
+  <div class="custom-modal-box">
+    <div id="cmIcon" style="font-size:32px;margin-bottom:12px;">⚠️</div>
+    <div class="cm-title" id="cmTitle">Título</div>
+    <div class="cm-desc" id="cmDesc">Mensaje descriptivo del cuadro de diálogo.</div>
+    <div class="cm-actions">
+      <button class="cm-btn cm-btn-cancel" id="cmBtnCancel" onclick="closeCustomModal()">Cancelar</button>
+      <button class="cm-btn cm-btn-confirm" id="cmBtnConfirm">Confirmar</button>
+    </div>
+  </div>
 </div>
 
 <script>
 // ═══════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════
-const products = [
-  {id:1,name:'Vestido Floral Verano',price:38,old:55,cat:'ropa',emoji:'👗',badge:'NEW',sizes:['XS','S','M','L'],colors:['Rojo','Azul','Verde'],desc:'Vestido ligero ideal para el verano con estampado floral exclusivo. Tela 100% algodón.',model:'EL-2025-001'},
-  {id:2,name:'Sneakers Urbanas',price:65,old:null,cat:'zapatos',emoji:'👟',badge:'HOT',sizes:['36','37','38','39','40'],colors:['Blanco','Negro'],desc:'Zapatos deportivos con suela antideslizante y diseño urbano moderno. Plantilla ergonómica.',model:'EL-2025-010'},
-  {id:3,name:'Cartera Premium',price:45,old:60,cat:'accesorios',emoji:'👜',badge:'NEW',sizes:[],colors:['Negro','Café','Camel'],desc:'Cartera de cuero sintético de alta calidad con múltiples compartimentos y cierre magnético.',model:'EL-2025-020'},
-  {id:4,name:'Blusa Elegante',price:28,old:null,cat:'ropa',emoji:'👚',badge:null,sizes:['XS','S','M','L','XL'],colors:['Blanco','Negro','Rosa'],desc:'Blusa de tela fluida perfecta para cualquier ocasión. Corte holgado y moderno.',model:'EL-2025-005'},
-  {id:5,name:'Labial Mate Set',price:18,old:25,cat:'belleza',emoji:'💄',badge:'OFERTA',sizes:[],colors:['Rojo','Coral','Bordo'],desc:'Set de 3 labiales mate de larga duración con acabado premium. Colores perfectos para cada ocasión.',model:'EL-2025-B01'},
-  {id:6,name:'Jean Slim Fit',price:42,old:null,cat:'ropa',emoji:'👖',badge:null,sizes:['28','30','32','34'],colors:['Azul oscuro','Negro'],desc:'Jean de alta elasticidad con corte slim. Se adapta perfectamente a tu figura con máxima comodidad.',model:'EL-2025-007'},
-];
+let products = [];
+
+async function fetchProducts() {
+  if(!sbClient) return;
+  const { data, error } = await sbClient.from('products').select('*').order('created_at', { ascending: false });
+  if(error) { console.error('Error fetching products:', error); return; }
+  
+  if(data) {
+    products = data.map(p => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      old: null, // Si deseas añadir precio viejo en el futuro
+      cat: p.category || 'otros',
+      emoji: getEmojiForCategory(p.category),
+      badge: null,
+      sizes: p.sizes ? p.sizes.split(',').map(s=>s.trim()) : [],
+      colors: [], 
+      desc: 'Producto exclusivo ELEUMHY.',
+      model: 'EL-' + p.id,
+      image_url: p.image_url
+    }));
+    renderShopGrid(products);
+  }
+}
+
+function getEmojiForCategory(cat) {
+  if(!cat) return '✨';
+  cat = cat.toLowerCase();
+  if(cat.includes('ropa')) return '👗';
+  if(cat.includes('zapat')) return '👟';
+  if(cat.includes('accesorio')) return '👜';
+  if(cat.includes('belleza')) return '💄';
+  return '✨';
+}
 
 // ═══════════════════════════════════════
 // SUPABASE CLIENT INIT
@@ -1469,6 +1518,53 @@ function showToast(msg, type = 'gold') {
 }
 
 // ═══════════════════════════════════════
+// CUSTOM NATIVE MODALS
+// ═══════════════════════════════════════
+let modalConfirmCallback = null;
+
+function closeCustomModal() {
+  document.getElementById('eleumhyModal').classList.remove('active');
+  modalConfirmCallback = null;
+}
+
+function showConfirm(title, message, onConfirm, isDanger = false) {
+  document.getElementById('cmTitle').textContent = title;
+  document.getElementById('cmDesc').textContent = message;
+  document.getElementById('cmIcon').textContent = isDanger ? '⚠️' : '✨';
+  
+  const btnC = document.getElementById('cmBtnCancel');
+  const btnK = document.getElementById('cmBtnConfirm');
+  
+  btnC.style.display = 'block';
+  btnC.textContent = 'Cancelar';
+  
+  btnK.textContent = 'Confirmar';
+  btnK.className = 'cm-btn cm-btn-confirm ' + (isDanger ? 'danger' : '');
+  
+  modalConfirmCallback = () => { closeCustomModal(); if(onConfirm) onConfirm(); };
+  btnK.onclick = modalConfirmCallback;
+  
+  document.getElementById('eleumhyModal').classList.add('active');
+}
+
+function showAlert(title, message) {
+  document.getElementById('cmTitle').textContent = title;
+  document.getElementById('cmDesc').textContent = message;
+  document.getElementById('cmIcon').textContent = 'ℹ️';
+  
+  const btnC = document.getElementById('cmBtnCancel');
+  const btnK = document.getElementById('cmBtnConfirm');
+  
+  btnC.style.display = 'none';
+  btnK.textContent = 'Entendido';
+  btnK.className = 'cm-btn cm-btn-confirm';
+  
+  btnK.onclick = closeCustomModal;
+  
+  document.getElementById('eleumhyModal').classList.add('active');
+}
+
+// ═══════════════════════════════════════
 // RIPPLE EFFECT
 // ═══════════════════════════════════════
 document.addEventListener('click', function(e) {
@@ -1671,10 +1767,16 @@ async function saveCollection() {
 
 async function loadAdminData() {
   if (!sbClient) return;
+  
   // Load Collections
   const { data: cols } = await sbClient.from('collections').select('*').order('created_at', { ascending: false });
   const colList = document.getElementById('adminColList');
+  const prodCollectionSelect = document.getElementById('prodCollection');
+  
   if (cols && cols.length > 0) {
+    if(prodCollectionSelect) {
+      prodCollectionSelect.innerHTML = cols.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
     colList.innerHTML = cols.map(c => `
       <div style="background:var(--white);padding:14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -1688,15 +1790,25 @@ async function loadAdminData() {
     colList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No hay colecciones aún.</div>';
   }
 
-  // Load Orders
-  const { data: ords } = await sbClient.from('orders').select('*, profiles(name, phone), products(name, image_url)').order('created_at', { ascending: false });
+  // Load Orders with Payments
+  const { data: ords } = await sbClient.from('orders')
+    .select('*, profiles(name, phone), products(name, image_url), payments(receipt_url)')
+    .order('created_at', { ascending: false });
+    
   const ordList = document.getElementById('adminOrdersList');
   if (ords && ords.length > 0) {
-    ordList.innerHTML = ords.map(o => `
-      <div style="background:var(--white);padding:14px;border-radius:14px;border:1px solid var(--border);">
+    ordList.innerHTML = ords.map(o => {
+      const pmt = o.payments && o.payments.length > 0 ? o.payments[0] : null;
+      return `
+      <div style="background:var(--white);padding:14px;border-radius:14px;border:1px solid var(--border);margin-bottom:12px;">
         <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
           <div style="font-weight:900;font-size:14px;">Pedido #${o.id}</div>
-          <div class="ok-badge">${o.status}</div>
+          <select style="border-radius:6px;border:1px solid var(--border);padding:4px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;" onchange="updateOrderStatus(${o.id}, this.value)">
+            <option value="pending" ${o.status==='pending'?'selected':''}>Pendiente</option>
+            <option value="paid" ${o.status==='paid'?'selected':''}>Pagado</option>
+            <option value="shipped" ${o.status==='shipped'?'selected':''}>Enviado</option>
+            <option value="delivered" ${o.status==='delivered'?'selected':''}>Entregado</option>
+          </select>
         </div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">👤 ${o.profiles?.name} · 📱 ${o.profiles?.phone}</div>
         <div style="display:flex;align-items:center;gap:10px;margin-top:10px;background:var(--off-white);padding:10px;border-radius:8px;">
@@ -1707,21 +1819,62 @@ async function loadAdminData() {
           </div>
           <div style="font-weight:900;font-size:14px;color:var(--gold-dark);">$${o.total}</div>
         </div>
+        ${pmt && pmt.receipt_url ? `<button class="btn-outline" style="width:100%;margin-top:12px;padding:8px;font-size:12px;" onclick="window.open('${pmt.receipt_url}', '_blank')">📄 Ver Comprobante de Pago</button>` : ''}
       </div>
-    `).join('');
+    `}).join('');
   } else {
     ordList.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--muted);"><div style="font-size:32px;margin-bottom:10px;">📦</div><div style="font-size:13px;font-weight:600;">No hay pedidos pendientes.</div></div>';
+  }
+
+  // Load Products into Admin List
+  const adProdList = document.getElementById('adminProductList');
+  if (adProdList) {
+    if (products && products.length > 0) {
+      adProdList.innerHTML = products.map(p => `
+        <div class="client-row">
+          <div style="width:52px;height:52px;background:var(--gold-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;overflow:hidden;">
+            ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;">` : p.emoji}
+          </div>
+          <div class="client-info"><div class="client-name">${p.name}</div><div class="client-meta">${p.cat} · Stock: ${p.stock || '∞'}</div></div>
+          <div style="text-align:right;"><div style="color:var(--gold-dark);font-weight:800;font-size:15px;">$${p.price}</div><button style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;">✏️ Editar</button></div>
+        </div>
+      `).join('');
+    } else {
+      adProdList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No hay productos.</div>';
+    }
   }
 }
 
 async function deleteCollection(id) {
-  if(!confirm('¿Estás seguro de eliminar esta colección?')) return;
+  showConfirm('Eliminar Colección', '¿Estás seguro de eliminar esta colección?', async () => {
+    if (sbClient) {
+      await sbClient.from('collections').delete().eq('id', id);
+      logAudit('Eliminó una colección', `Eliminó la colección ID: ${id}`);
+      loadAdminData();
+      showToast('Colección eliminada', 'gold');
+    }
+  }, true);
+}
+
+async function updateOrderStatus(id, newStatus) {
   if (sbClient) {
-    await sbClient.from('collections').delete().eq('id', id);
-    logAudit('Eliminó una colección', `Eliminó la colección ID: ${id}`);
-    loadAdminData();
-    showToast('Colección eliminada', 'gold');
+    const { error } = await sbClient.from('orders').update({ status: newStatus }).eq('id', id);
+    if (!error) {
+      showToast('Estatus actualizado', 'green');
+      logAudit('Actualizó Pedido', `Cambió el estatus del pedido #${id} a ${newStatus}`);
+    } else {
+      showAlert('Error', 'No se pudo actualizar: ' + error.message);
+    }
   }
+}
+
+function copyAdminLink() {
+  const link = window.location.origin + window.location.pathname + '?invite=admin2026#register';
+  navigator.clipboard.writeText(link).then(() => {
+    showToast('Enlace de invitación copiado', 'green');
+  }).catch(() => {
+    showAlert('Enlace', link);
+  });
 }
 
 // PWA Install Modal (Native look)
@@ -1793,6 +1946,7 @@ async function initApp() {
       await new Promise(r => setTimeout(r, 800));
     }
     await checkSession();
+    await fetchProducts();
     renderHomeGrid();
     renderShopGrid();
     generateQR();
