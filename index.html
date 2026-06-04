@@ -206,9 +206,17 @@ body{font-family:'Montserrat',sans-serif;background:var(--off-white);color:var(-
 /* ── FORMS ── */
 .form-group{margin-bottom:16px;}
 .form-label{font-size:10px;color:var(--muted);margin-bottom:7px;display:block;font-weight:800;letter-spacing:1px;text-transform:uppercase;}
-.form-input{width:100%;background:var(--white);border:2px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:13px;font-family:'Montserrat',sans-serif;outline:none;font-weight:500;transition:var(--transition);}
+.form-input{width:100%;background:var(--white);border:2px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:13px;font-family:'Montserrat',sans-serif;outline:none;font-weight:500;transition:var(--transition);box-sizing:border-box;}
 .form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
 select.form-input{cursor:pointer;}
+/* Ocultar ojo nativo del navegador en campos password */
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear { display: none !important; visibility: hidden; }
+.pass-wrap{position:relative;}
+.pass-toggle{width:100%;margin-top:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);}
+.pass-toggle:hover{border-color:var(--gold);color:var(--gold-dark);}
 
 /* ── CUOTAS MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-end;backdrop-filter:blur(4px);}
@@ -462,9 +470,11 @@ select.form-input{cursor:pointer;}
     <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" type="email" id="loginEmail" placeholder="tu@correo.com"></div>
     <div class="form-group">
       <label class="form-label">Contraseña</label>
-      <div style="position:relative;">
-        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" style="padding-right:45px;">
-        <button type="button" onclick="togglePass('loginPass', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);">👁️</button>
+      <div class="pass-wrap">
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+        <button type="button" class="pass-toggle" onclick="togglePass('loginPass',this)">
+          <span id="loginPassIcon">👁️</span> Ver contraseña
+        </button>
       </div>
     </div>
     <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;margin-top:8px;border-radius:14px;" onclick="doLogin()">Entrar →</button>
@@ -483,16 +493,20 @@ select.form-input{cursor:pointer;}
     <div class="form-group"><label class="form-label">Teléfono WhatsApp</label><input class="form-input" type="tel" id="regPhone" placeholder="0414-1234567"></div>
     <div class="form-group">
       <label class="form-label">Contraseña</label>
-      <div style="position:relative;">
-        <input class="form-input" type="password" id="regPass" placeholder="Mínimo 6 caracteres" style="padding-right:45px;">
-        <button type="button" onclick="togglePass('regPass', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);">👁️</button>
+      <div class="pass-wrap">
+        <input class="form-input" type="password" id="regPass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        <button type="button" class="pass-toggle" onclick="togglePass('regPass',this)">
+          <span>👁️</span> Ver contraseña
+        </button>
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Confirmar contraseña</label>
-      <div style="position:relative;">
-        <input class="form-input" type="password" id="regPass2" placeholder="Repetir contraseña" style="padding-right:45px;">
-        <button type="button" onclick="togglePass('regPass2', this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);">👁️</button>
+      <div class="pass-wrap">
+        <input class="form-input" type="password" id="regPass2" placeholder="Repetir contraseña" autocomplete="new-password">
+        <button type="button" class="pass-toggle" onclick="togglePass('regPass2',this)">
+          <span>👁️</span> Ver contraseña
+        </button>
       </div>
     </div>
     <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="doRegister()">Crear Cuenta →</button>
@@ -1269,12 +1283,15 @@ async function doLogin() {
 
 function togglePass(id, btn) {
   const input = document.getElementById(id);
+  const span = btn.querySelector('span');
   if (input.type === 'password') {
     input.type = 'text';
-    btn.textContent = '🙈';
+    if (span) span.textContent = '🙈';
+    btn.childNodes[btn.childNodes.length - 1].textContent = ' Ocultar contraseña';
   } else {
     input.type = 'password';
-    btn.textContent = '👁️';
+    if (span) span.textContent = '👁️';
+    btn.childNodes[btn.childNodes.length - 1].textContent = ' Ver contraseña';
   }
 }
 
