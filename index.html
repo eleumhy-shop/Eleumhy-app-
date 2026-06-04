@@ -711,17 +711,67 @@ select.form-input{cursor:pointer;}
 
 <!-- ADD PRODUCT -->
 <div class="screen" id="screen-add-product">
-  <button class="back-btn" onclick="showScreen('admin')">← Productos</button>
+  <button class="back-btn" onclick="showScreen('admin')">← Volver al Panel</button>
   <div style="font-size:20px;font-weight:900;margin-bottom:22px;">+ Nuevo Producto</div>
-  <div class="form-group"><label class="form-label">Nombre del producto</label><input class="form-input" placeholder="Ej: Vestido Floral Verano"></div>
-  <div class="form-group"><label class="form-label">Categoría</label><select class="form-input"><option>Ropa</option><option>Zapatos</option><option>Accesorios</option><option>Belleza</option></select></div>
-  <div class="form-group"><label class="form-label">Precio (USD)</label><input class="form-input" type="number" placeholder="0.00"></div>
-  <div class="form-group"><label class="form-label">Precio anterior (tachado)</label><input class="form-input" type="number" placeholder="Opcional"></div>
-  <div class="form-group"><label class="form-label">Tallas disponibles</label><input class="form-input" placeholder="XS, S, M, L, XL"></div>
-  <div class="form-group"><label class="form-label">Colores</label><input class="form-input" placeholder="Rojo, Azul, Negro"></div>
-  <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-input" rows="3" placeholder="Descripción del producto..."></textarea></div>
-  <div class="upload-zone" style="margin-bottom:18px;"><div style="font-size:28px;margin-bottom:8px;">📷</div><div style="font-size:13px;font-weight:800;">Subir Fotos del Producto</div><div style="font-size:11px;color:var(--muted);">PNG, JPG · Máx 5 fotos</div></div>
-  <button class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="saveProduct()">Publicar Producto →</button>
+  
+  <div class="form-group"><label class="form-label">Nombre del producto</label><input id="addProdName" class="form-input" placeholder="Ej: Vestido Floral Verano"></div>
+  <div class="form-group"><label class="form-label">Colección / Categoría</label><select id="addProdCat" class="form-input"><option>Ropa</option><option>Zapatos</option><option>Accesorios</option><option>Belleza</option></select></div>
+  <div class="form-group"><label class="form-label">Precio (USD)</label><input id="addProdPrice" class="form-input" type="number" placeholder="0.00"></div>
+  <div class="form-group"><label class="form-label">Inventario (Stock)</label><input id="addProdStock" class="form-input" type="number" placeholder="Cantidad disponible"></div>
+  <div class="form-group"><label class="form-label">Tallas disponibles</label><input id="addProdSizes" class="form-input" placeholder="XS, S, M, L, XL"></div>
+  <div class="form-group"><label class="form-label">Colores</label><input id="addProdColors" class="form-input" placeholder="Rojo, Azul, Negro"></div>
+  <div class="form-group"><label class="form-label">Descripción</label><textarea id="addProdDesc" class="form-input" rows="3" placeholder="Descripción del producto..."></textarea></div>
+  
+  <div class="form-group">
+    <label class="form-label">Opciones de Pago</label>
+    <label style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;margin-bottom:10px;"><input type="checkbox" id="addProdInstallments" onchange="document.getElementById('installmentsConfig').style.display=this.checked?'block':'none'"> Permite pago por cuotas</label>
+    <div id="installmentsConfig" style="display:none;background:var(--surface);padding:14px;border-radius:12px;">
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px;">Máximo de cuotas permitidas:</div>
+      <select id="addProdMaxInst" class="form-input" style="margin-bottom:10px;"><option value="3">3 Cuotas</option><option value="6">6 Cuotas</option><option value="12">12 Cuotas</option></select>
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px;">Recargo por mora (%):</div>
+      <input id="addProdLateFee" type="number" class="form-input" placeholder="Ej: 5">
+    </div>
+  </div>
+
+  <div class="upload-zone" style="margin-bottom:18px;cursor:pointer;" onclick="document.getElementById('productImageInput').click()">
+    <input type="file" id="productImageInput" accept="image/*" style="display:none;" onchange="handleProductImageUpload(event)">
+    <div style="font-size:28px;margin-bottom:8px;">📷</div>
+    <div style="font-size:13px;font-weight:800;">Subir Foto del Producto</div>
+    <div style="font-size:11px;color:var(--muted);">Toca para abrir cámara o galería</div>
+    <img id="productImagePreview" style="display:none;width:100%;border-radius:12px;margin-top:14px;object-fit:cover;">
+  </div>
+  <button id="btnSaveProduct" class="btn-gold" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="saveProduct()">Publicar Producto →</button>
+</div>
+
+<!-- ADMIN COLLECTIONS -->
+<div class="screen" id="screen-admin-collections">
+  <div style="font-size:20px;font-weight:900;margin-bottom:22px;">Gestión de Colecciones</div>
+  <div class="form-group"><label class="form-label">Nueva Colección</label>
+    <div style="display:flex;gap:10px;">
+      <input id="addColName" class="form-input" placeholder="Ej: Temporada Verano" style="flex:1;">
+      <select id="addColColor" class="form-input" style="width:100px;">
+        <option value="gold">Dorado</option><option value="danger">Rojo</option><option value="text">Negro</option>
+      </select>
+    </div>
+    <button class="btn-outline" style="width:100%;margin-top:10px;padding:12px;border-radius:12px;" onclick="saveCollection()">+ Crear Colección</button>
+  </div>
+  <div style="font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;margin-top:24px;">Tus Colecciones</div>
+  <div id="adminColList" style="display:flex;flex-direction:column;gap:10px;">
+    <!-- Lista de colecciones generada por JS -->
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No hay colecciones aún.</div>
+  </div>
+</div>
+
+<!-- ADMIN ORDERS -->
+<div class="screen" id="screen-admin-orders">
+  <div style="font-size:20px;font-weight:900;margin-bottom:22px;">Pedidos Recientes</div>
+  <div id="adminOrdersList" style="display:flex;flex-direction:column;gap:14px;">
+    <!-- Lista de pedidos generada por JS -->
+    <div style="text-align:center;padding:40px 20px;color:var(--muted);">
+      <div style="font-size:32px;margin-bottom:10px;">📦</div>
+      <div style="font-size:13px;font-weight:600;">No hay pedidos pendientes.</div>
+    </div>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -863,6 +913,7 @@ function showScreen(id) {
   if (id === 'home') renderHomeGrid();
   if (id === 'admin') renderWeekChart();
   if (id === 'profile') renderProfile();
+  if (id === 'admin-collections' || id === 'admin-orders') loadAdminData();
   if (id !== historyStack[historyStack.length - 1]) historyStack.push(id);
   window.scrollTo(0, 0);
 }
@@ -1387,6 +1438,165 @@ self.addEventListener('push',e=>{const d=e.data?e.data.text():'Nueva notificaci�
   const blob = new Blob([swCode], {type:'application/javascript'});
   const swUrl = URL.createObjectURL(blob);
   navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+// ═══════════════════════════════════════
+// ADMIN FUNCTIONS (PRODUCTS)
+// ═══════════════════════════════════════
+let uploadedProductImageFile = null;
+
+function handleProductImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  uploadedProductImageFile = file;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = document.getElementById('productImagePreview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+  }
+  reader.readAsDataURL(file);
+}
+
+async function saveProduct() {
+  const name = document.getElementById('addProdName').value.trim();
+  const cat = document.getElementById('addProdCat').value.toLowerCase();
+  const price = parseFloat(document.getElementById('addProdPrice').value);
+  const stock = parseInt(document.getElementById('addProdStock').value) || 0;
+  const sizes = document.getElementById('addProdSizes').value;
+  const colors = document.getElementById('addProdColors').value;
+  const desc = document.getElementById('addProdDesc').value.trim();
+  const allowsInst = document.getElementById('addProdInstallments').checked;
+  const maxInst = parseInt(document.getElementById('addProdMaxInst').value);
+  const lateFee = parseFloat(document.getElementById('addProdLateFee').value) || 0;
+
+  if (!name || isNaN(price)) { showToast('Nombre y precio requeridos', 'red'); return; }
+
+  const btn = document.getElementById('btnSaveProduct');
+  const originalText = btn.innerText;
+  btn.innerText = 'Subiendo... ⏳';
+  btn.disabled = true;
+
+  try {
+    let imageUrl = null;
+    if (uploadedProductImageFile && sbClient) {
+      const ext = uploadedProductImageFile.name.split('.').pop();
+      const fileName = `products/${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
+      const { data: uploadData, error: uploadError } = await sbClient.storage
+        .from('eleumhy_images')
+        .upload(fileName, uploadedProductImageFile, { cacheControl: '3600', upsert: false });
+        
+      if (uploadError) throw uploadError;
+      
+      const { data: { publicUrl } } = sbClient.storage
+        .from('eleumhy_images')
+        .getPublicUrl(fileName);
+        
+      imageUrl = publicUrl;
+    }
+
+    if (sbClient) {
+      const { error } = await sbClient.from('products').insert({
+        name, category: cat, price, stock, sizes, colors, description: desc, image_url: imageUrl, allows_installments: allowsInst, max_installments: maxInst, late_fee_pct: lateFee
+      });
+      if (error) throw error;
+    }
+
+    showToast('✅ Producto publicado', 'green');
+    document.getElementById('addProdName').value = '';
+    document.getElementById('addProdPrice').value = '';
+    document.getElementById('addProdStock').value = '';
+    document.getElementById('addProdDesc').value = '';
+    document.getElementById('productImagePreview').style.display = 'none';
+    uploadedProductImageFile = null;
+    
+    // Aquí luego llamaremos a cargar los productos reales
+    showScreen('shop');
+    
+  } catch (err) {
+    showToast('Error: ' + err.message, 'red');
+  } finally {
+    btn.innerText = originalText;
+    btn.disabled = false;
+  }
+}
+
+async function saveCollection() {
+  const name = document.getElementById('addColName').value.trim();
+  const color = document.getElementById('addColColor').value;
+  if (!name) { showToast('Ingresa un nombre', 'red'); return; }
+  
+  const originalText = event.target.innerText;
+  event.target.innerText = 'Guardando...';
+  
+  try {
+    if (sbClient) {
+      const { error } = await sbClient.from('collections').insert({ name, color_dot: color });
+      if (error) throw error;
+    }
+    showToast('✅ Colección creada', 'green');
+    document.getElementById('addColName').value = '';
+    loadAdminData();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'red');
+  } finally {
+    event.target.innerText = originalText;
+  }
+}
+
+async function loadAdminData() {
+  if (!sbClient) return;
+  // Load Collections
+  const { data: cols } = await sbClient.from('collections').select('*').order('created_at', { ascending: false });
+  const colList = document.getElementById('adminColList');
+  if (cols && cols.length > 0) {
+    colList.innerHTML = cols.map(c => `
+      <div style="background:var(--white);padding:14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:var(--${c.color_dot});"></div>
+          <div style="font-weight:800;font-size:14px;">${c.name}</div>
+        </div>
+        <button style="color:var(--danger);background:transparent;border:none;font-weight:700;font-size:12px;" onclick="deleteCollection(${c.id})">Eliminar</button>
+      </div>
+    `).join('');
+  } else {
+    colList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No hay colecciones aún.</div>';
+  }
+
+  // Load Orders
+  const { data: ords } = await sbClient.from('orders').select('*, profiles(name, phone), products(name, image_url)').order('created_at', { ascending: false });
+  const ordList = document.getElementById('adminOrdersList');
+  if (ords && ords.length > 0) {
+    ordList.innerHTML = ords.map(o => `
+      <div style="background:var(--white);padding:14px;border-radius:14px;border:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-weight:900;font-size:14px;">Pedido #${o.id}</div>
+          <div class="ok-badge">${o.status}</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">👤 ${o.profiles?.name} · 📱 ${o.profiles?.phone}</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;background:var(--off-white);padding:10px;border-radius:8px;">
+          <img src="${o.products?.image_url || 'icon.png'}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:700;">${o.products?.name}</div>
+            <div style="font-size:11px;color:var(--muted);">Talla: ${o.size} · Cantidad: ${o.qty}</div>
+          </div>
+          <div style="font-weight:900;font-size:14px;color:var(--gold-dark);">$${o.total}</div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    ordList.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--muted);"><div style="font-size:32px;margin-bottom:10px;">📦</div><div style="font-size:13px;font-weight:600;">No hay pedidos pendientes.</div></div>';
+  }
+}
+
+async function deleteCollection(id) {
+  if(!confirm('¿Estás seguro de eliminar esta colección?')) return;
+  if (sbClient) {
+    await sbClient.from('collections').delete().eq('id', id);
+    loadAdminData();
+    showToast('Colección eliminada', 'gold');
+  }
 }
 
 // PWA Install Modal (Native look)
