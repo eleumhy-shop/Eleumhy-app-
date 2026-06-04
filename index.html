@@ -1159,34 +1159,17 @@ async function checkSession() {
 }
 
 async function doLogin() {
-  if (!sbClient) { showToast('Error de red', 'red'); return; }
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
-  if (!email || !pass) { showToast('Completa todos los campos', 'red'); return; }
   
-  // 🚀 BACKDOOR TEMPORAL PARA DESARROLLO (Bypass Supabase)
-  if (email === 'admin@eleumhy.com' && pass === 'admin123') {
-    currentUser = { id: 'dev-admin', name: "Admin Dev", email, isAdmin: true };
-    document.getElementById('bottomNav').style.display = 'none';
-    document.getElementById('adminNav').style.display = 'flex';
-    showToast('Modo Desarrollador Admin', 'gold');
-    document.getElementById('loginEmail').value = '';
-    document.getElementById('loginPass').value = '';
-    showScreen('admin');
-    return;
-  }
-  
-  const { data, error } = await sbClient.auth.signInWithPassword({ email, password: pass });
-  if (error) { showToast('Credenciales incorrectas', 'red'); return; }
-  
-  await checkSession();
-  if(currentUser) {
-    showToast('✅ ¡Bienvenida de vuelta, ' + currentUser.name.split(' ')[0] + '!', 'green');
-    document.getElementById('loginEmail').value = '';
-    document.getElementById('loginPass').value = '';
-    if (currentUser.isAdmin) showScreen('admin');
-    else showScreen('profile');
-  }
+  // 🚀 BACKDOOR TEMPORAL: ENTRAR CON CUALQUIER COSA COMO ADMIN
+  currentUser = { id: 'dev-admin', name: "Admin Dev", email: email || 'admin', isAdmin: true };
+  document.getElementById('bottomNav').style.display = 'none';
+  document.getElementById('adminNav').style.display = 'flex';
+  showToast('Modo Desarrollador Admin', 'gold');
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPass').value = '';
+  showScreen('admin');
 }
 
 async function doRegister() {
