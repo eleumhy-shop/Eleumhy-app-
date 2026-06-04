@@ -1184,8 +1184,17 @@ function renderProfile() {
       <button class="btn-outline" style="width:100%;padding:15px;font-size:14px;border-radius:14px;" onclick="showScreen('register')">Crear Cuenta Gratis</button>
       <div class="divider-gold"></div>
       <div class="menu-item" onclick="showToast('Inicia sesión para ver tus pedidos','red');showScreen('login');"><span>📦 Mis Pedidos</span><span style="color:var(--muted);">→</span></div>
-      <div class="menu-item" onclick="showToast('Inicia sesión para ver tus cuotas','red');showScreen('login');"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>`;
+      <div class="menu-item" onclick="showToast('Inicia sesión para ver tus cuotas','red');showScreen('login');"><span>💳 Mis Cuotas</span><span style="color:var(--muted);">→</span></div>
+      <div class="divider-gold"></div>
+      <div class="menu-item" onclick="prefillAdmin()"><span>⚙️ Acceso Administrador</span><span style="color:var(--gold);">→</span></div>`;
   }
+}
+
+function prefillAdmin() {
+  showScreen('login');
+  document.getElementById('loginEmail').value = 'admin@eleumhy.com';
+  document.getElementById('loginPass').value = 'admin123';
+  showToast('Ingresa como administrador', 'gold');
 }
 
 // ═══════════════════════════════════════
@@ -1330,30 +1339,49 @@ self.addEventListener('push',e=>{const d=e.data?e.data.text():'Nueva notificaci�
 
 // PWA Install Modal (Native look)
 let deferredPrompt = null;
+const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+function showInstallModal() {
+  if (isStandalone || document.getElementById('installModal')) return;
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay fade-in-up';
+  modal.id = 'installModal';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  
+  let content = isIos ? `
+    <div style="font-size:18px;font-weight:900;margin-bottom:8px;">Instala ELEUMHY en iOS</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;">Para instalar la app, toca el botón Compartir <strong style="font-size:16px;">⍗</strong> en la barra inferior y selecciona <strong>"Agregar a inicio"</strong>.</div>
+    <button style="width:100%;padding:14px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:var(--transition);" onclick="document.getElementById('installModal').remove()">Entendido</button>
+  ` : `
+    <div style="font-size:18px;font-weight:900;margin-bottom:8px;">Instala ELEUMHY</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;">Añade la app a tu pantalla de inicio para una experiencia premium y ofertas exclusivas.</div>
+    <button class="btn-gold" style="width:100%;padding:14px;border-radius:12px;margin-bottom:10px;font-size:14px;" onclick="installApp()">Instalar App</button>
+    <button style="width:100%;padding:14px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:var(--transition);" onclick="document.getElementById('installModal').remove()">Más tarde</button>
+  `;
+
+  modal.innerHTML = `
+    <div style="background:var(--white);border-radius:24px;padding:30px 24px;width:90%;max-width:320px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);">
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--gold-glow);position:relative;overflow:hidden;">
+        <img src="icon.png" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover;z-index:2;position:relative;">
+        <span style="position:absolute;color:#fff;font-weight:900;font-size:32px;z-index:1;">E</span>
+      </div>
+      ${content}
+    </div>`;
+  document.body.appendChild(modal);
+}
+
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  setTimeout(() => {
-    if (document.getElementById('installModal')) return;
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay fade-in-up';
-    modal.id = 'installModal';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-    modal.innerHTML = `
-      <div style="background:var(--white);border-radius:24px;padding:30px 24px;width:90%;max-width:320px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.2);">
-        <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--gold-glow);position:relative;overflow:hidden;">
-          <img src="icon.png" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover;z-index:2;position:relative;">
-          <div style="position:absolute;font-size:32px;color:#fff;z-index:1;">E</div>
-        </div>
-        <div style="font-size:18px;font-weight:900;margin-bottom:8px;">Instala ELEUMHY</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;">Añade la app a tu pantalla de inicio para una experiencia premium y ofertas exclusivas.</div>
-        <button class="btn-gold" style="width:100%;padding:14px;border-radius:12px;margin-bottom:10px;font-size:14px;" onclick="installApp()">Instalar App</button>
-        <button style="width:100%;padding:14px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:var(--transition);" onclick="document.getElementById('installModal').remove()">Más tarde</button>
-      </div>`;
-    document.body.appendChild(modal);
-  }, 3000); // Aparece 3 segundos después de cargar
+  setTimeout(showInstallModal, 3000);
 });
+
+// For iOS (since beforeinstallprompt won't fire)
+if (isIos && !isStandalone) {
+  setTimeout(showInstallModal, 3000);
+}
 
 function installApp() {
   if (deferredPrompt) { 
