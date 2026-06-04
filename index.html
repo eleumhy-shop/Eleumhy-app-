@@ -1310,7 +1310,13 @@ async function doRegister() {
   if (pass !== pass2) { showToast('Las contraseñas no coinciden', 'red'); return; }
   if (pass.length < 6) { showToast('Mínimo 6 caracteres', 'red'); return; }
   
-  const { data, error } = await sbClient.auth.signUp({ email, password: pass });
+  const { data, error } = await sbClient.auth.signUp({
+    email,
+    password: pass,
+    options: {
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
+  });
   if (error) { showToast(error.message, 'red'); return; }
   
   if (data.user) {
@@ -1779,18 +1785,37 @@ function installApp() {
 // ═══════════════════════════════════════
 async function initApp() {
   try {
+    // Detectar si el usuario viene de confirmar su correo (link de Supabase)
+    const hash = window.location.hash;
+    if (hash && (hash.includes('access_token') || hash.includes('type=signup') || hash.includes('type=recovery'))) {
+      // Supabase procesa el token del hash automáticamente
+      // Solo esperamos un momento y chequeamos sesión
+      await new Promise(r => setTimeout(r, 800));
+    }
     await checkSession();
     renderHomeGrid();
     renderShopGrid();
     generateQR();
     updateCartBadge();
     selectPay('movil');
-    if (currentUser && currentUser.isAdmin) showScreen('admin');
-    else renderProfile();
+    // Redirigir al panel correcto según el usuario
+    if (currentUser && currentUser.isAdmin) {
+      showToast('✅ ¡Bienvenida de nuevo, ' + currentUser.name.split(' ')[0] + '!', 'green');
+      showScreen('admin');
+    } else if (currentUser) {
+      showToast('✅ ¡Hola ' + currentUser.name.split(' ')[0] + '!', 'green');
+      showScreen('profile');
+    } else {
+      renderProfile();
+    }
     renderWeekChart();
+    // Limpiar el hash de la URL para que se vea limpia
+    if (hash && hash.includes('access_token')) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
     setTimeout(() => { if ('Notification' in window && Notification.permission === 'default') requestNotifPermission(); }, 3000);
   } catch (err) {
-    alert("Error de inicio: " + err.message);
+    console.error('Error de inicio:', err);
   }
 }
 initApp();
